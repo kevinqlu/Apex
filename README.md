@@ -17,6 +17,12 @@ npm run dev
 
 The web app is at http://localhost:5173 and the API at http://localhost:3001. Check the API with http://localhost:3001/api/health.
 
+## Signing in
+
+With `DEMO_MODE=true` (the default in `.env.example`) the login screen lists the two demo drivers and fills in the form for you. The demo password is `apex-demo-1`. Set `DEMO_MODE=false` to hide them.
+
+Sessions last 12 hours and live in an httpOnly cookie. After 5 wrong attempts for the same driver ID and IP, sign-in is blocked for 15 minutes. The server only accepts changes from the origin in `APP_ORIGIN`, so set that if you open the app from another address, such as a phone on your network.
+
 ## Commands
 
 | Command          | What it does                                 |
