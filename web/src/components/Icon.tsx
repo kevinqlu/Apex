@@ -6,6 +6,13 @@ const paths = {
   documents: 'M6 2h8l5 5v15H6zM14 2v5h5M9 13h7M9 17h7',
   help: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17.5v.01',
   error: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 7v6M12 16.5v.01',
+  clock: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2',
+  warning: 'M12 3l10 18H2zM12 10v5M12 18v.01',
+  checkCircle: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM8 12l3 3 5-6',
+  moon: 'M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z',
+  briefcase: 'M3 7h18v13H3zM9 7V4h6v3M3 13h18',
+  power: 'M12 3v9M6.3 6.3a8 8 0 1 0 11.4 0',
+  chevron: 'M6 9l6 6 6-6',
   signOut: 'M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5M15 8l4 4-4 4M19 12H9',
 } as const;
 

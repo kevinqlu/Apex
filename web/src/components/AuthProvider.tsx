@@ -19,6 +19,7 @@ interface AuthContextValue {
   state: AuthState;
   signIn: (driverId: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  updateDriver: (driver: authApi.Driver) => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -52,7 +53,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setState({ status: 'signed-out' });
   }, []);
 
-  const value = useMemo(() => ({ state, signIn, signOut }), [state, signIn, signOut]);
+  const updateDriver = useCallback(
+    (driver: authApi.Driver) => setState({ status: 'signed-in', driver }),
+    [],
+  );
+
+  const value = useMemo(
+    () => ({ state, signIn, signOut, updateDriver }),
+    [state, signIn, signOut, updateDriver],
+  );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

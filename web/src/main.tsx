@@ -6,6 +6,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/shell.css';
 import './styles/login.css';
+import './styles/loads.css';
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -15,6 +16,7 @@ import { AuthProvider } from './components/AuthProvider';
 import { ComingSoon } from './components/ComingSoon';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './routes/home/Home';
+import { Loads } from './routes/loads/Loads';
 import { Login } from './routes/login/Login';
 
 createRoot(document.getElementById('root')!).render(
@@ -26,12 +28,7 @@ createRoot(document.getElementById('root')!).render(
           <Route element={<ProtectedRoute />}>
             <Route element={<AppShell />}>
               <Route path="/" element={<Home />} />
-              <Route
-                path="/loads"
-                element={
-                  <ComingSoon title="Loads">Your assigned loads will show up here.</ComingSoon>
-                }
-              />
+              <Route path="/loads" element={<Loads />} />
               <Route
                 path="/alerts"
                 element={
