@@ -1,0 +1,41 @@
+.login {
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.brand-large {
+  margin: 0;
+  font-size: 3rem;
+}
+
+.login-sub {
+  margin: -0.75rem 0 0;
+}
+
+.login label {
+  font-weight: 600;
+}
+
+.login input {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 0.75rem;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+
+.password-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.demo p {
+  margin: 0 0 0.5rem;
+}

@@ -1,0 +1,37 @@
+:root {
+  --ink: #101b26;
+  --surface: #ffffff;
+  --background: #eef1f3;
+  --brand: #0e6b4a;
+  --brand-ink: #ffffff;
+  --urgent: #b3261e;
+  --urgent-soft: #fbe3e1;
+  --caution: #7a5200;
+  --caution-soft: #fbebc2;
+  --info: #1b5fa8;
+  --info-soft: #deebf8;
+  --line: #c9d1d8;
+
+  --font-body: 'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Barlow Condensed', 'Barlow', system-ui, sans-serif;
+
+  --tap: 48px;
+  --radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #eaf0f5;
+    --surface: #16212b;
+    --background: #0d141b;
+    --brand: #4cc38a;
+    --brand-ink: #0d141b;
+    --urgent: #ff8a80;
+    --urgent-soft: #3b1714;
+    --caution: #f5c451;
+    --caution-soft: #3a2c08;
+    --info: #8cc0f5;
+    --info-soft: #12283d;
+    --line: #34444f;
+  }
+}
