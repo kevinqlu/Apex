@@ -1,10 +1,13 @@
 import express from 'express';
 import { config } from './config/env.js';
 import type { Db } from './db/index.js';
+import { requireSession } from './middleware/auth.js';
 import { errorHandler, notFound } from './middleware/errors.js';
 import { createLoginLimiter } from './middleware/loginLimiter.js';
 import { originCheck } from './middleware/originCheck.js';
 import { authRouter } from './routes/auth.js';
+import { loadsRouter } from './routes/loads.js';
+import { meRouter } from './routes/me.js';
 
 export function createApp(db: Db) {
   const app = express();
@@ -21,7 +24,10 @@ export function createApp(db: Db) {
   // One limiter per app, so tests start with a clean slate.
   app.use('/api/auth', authRouter(db, createLoginLimiter()));
 
-  // Data routes from later slices go here, each behind requireSession(db).
+  // Every data route sits behind requireSession, which sets the driver for the request.
+  const session = requireSession(db);
+  app.use('/api/me', session, meRouter(db));
+  app.use('/api/loads', session, loadsRouter(db));
 
   app.use('/api', notFound);
   app.use(errorHandler);
