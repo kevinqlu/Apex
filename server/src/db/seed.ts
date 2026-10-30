@@ -191,11 +191,24 @@ export function seed(db: Db, now = Date.now()): void {
       'Fuel cards are now available at every terminal from 6 a.m. to 8 p.m.',
       at(-DAY),
     );
+    insertNote.run(
+      'N-4',
+      'announcement',
+      'Company',
+      'Holiday schedule posted',
+      'Terminals close early the day before the holiday. Check with your dispatcher before you plan a run.',
+      at(-3 * DAY),
+    );
     // Only the lane closure is targeted, so it reaches Marcus alone.
     db.prepare('INSERT INTO notification_targets (notification_id, driver_id) VALUES (?, ?)').run(
       'N-2',
       'D-1042',
     );
+
+    // Marcus has already read the older announcement, so he sees both read and unread items.
+    db.prepare(
+      'INSERT INTO notification_reads (driver_id, notification_id, read_at) VALUES (?, ?, ?)',
+    ).run('D-1042', 'N-4', at(-2 * DAY));
 
     // The file behind this row arrives with uploads in Slice 5.
     db.prepare(

@@ -8,6 +8,7 @@ import { originCheck } from './middleware/originCheck.js';
 import { authRouter } from './routes/auth.js';
 import { loadsRouter } from './routes/loads.js';
 import { meRouter } from './routes/me.js';
+import { notificationsRouter } from './routes/notifications.js';
 
 export function createApp(db: Db) {
   const app = express();
@@ -28,6 +29,7 @@ export function createApp(db: Db) {
   const session = requireSession(db);
   app.use('/api/me', session, meRouter(db));
   app.use('/api/loads', session, loadsRouter(db));
+  app.use('/api/notifications', session, notificationsRouter(db));
 
   app.use('/api', notFound);
   app.use(errorHandler);
