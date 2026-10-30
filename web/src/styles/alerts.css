@@ -1,0 +1,158 @@
+.message-ok {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+/* Unread count on the Alerts tab. The number is text, so it never relies on color. */
+.nav-link {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 2px;
+  left: calc(50% + 4px);
+  min-width: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--urgent-solid);
+  color: var(--on-urgent);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .badge {
+    position: static;
+    margin-left: auto;
+  }
+}
+
+/* Urgent banner on the dashboard */
+.banner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: var(--urgent-solid);
+  color: var(--on-urgent);
+}
+
+.banner-kind {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.banner-title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.banner-body {
+  margin: 0;
+}
+
+.banner-button {
+  align-self: flex-start;
+  border-color: var(--on-urgent);
+  background: var(--on-urgent);
+  color: var(--urgent-solid);
+}
+
+.chip-urgent {
+  background: var(--urgent-soft);
+  color: var(--urgent);
+}
+
+.new-label {
+  padding: 0.1rem 0.5rem;
+  border: 2px solid var(--brand);
+  border-radius: 6px;
+  color: var(--brand);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Recent unread on the dashboard */
+.recent {
+  gap: 0.25rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.recent .new-label {
+  align-self: flex-start;
+}
+
+/* Alerts screen */
+.filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+@media (min-width: 600px) {
+  .filters {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.alert-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alert-time {
+  margin-left: auto;
+  font-size: 0.9rem;
+}
+
+/* Unread is marked by the New label, a heavier title, and a bar, not color alone. */
+.alert-unread {
+  border-left: 6px solid var(--brand);
+}
+
+.alert-unread .alert-title {
+  font-weight: 800;
+}
+
+.alert-title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.alert-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.alert-body {
+  margin: 0;
+}

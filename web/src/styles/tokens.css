@@ -6,6 +6,9 @@
   --brand-ink: #ffffff;
   --urgent: #b3261e;
   --urgent-soft: #fbe3e1;
+  /* The solid urgent banner keeps its red and white text in both color schemes. */
+  --urgent-solid: #b3261e;
+  --on-urgent: #ffffff;
   --caution: #7a5200;
   --caution-soft: #fbebc2;
   --info: #1b5fa8;

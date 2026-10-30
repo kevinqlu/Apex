@@ -7,6 +7,7 @@ import './styles/base.css';
 import './styles/shell.css';
 import './styles/login.css';
 import './styles/loads.css';
+import './styles/alerts.css';
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -16,6 +17,7 @@ import { AuthProvider } from './components/AuthProvider';
 import { ComingSoon } from './components/ComingSoon';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './routes/home/Home';
+import { Alerts } from './routes/alerts/Alerts';
 import { Loads } from './routes/loads/Loads';
 import { Login } from './routes/login/Login';
 
@@ -29,14 +31,7 @@ createRoot(document.getElementById('root')!).render(
             <Route element={<AppShell />}>
               <Route path="/" element={<Home />} />
               <Route path="/loads" element={<Loads />} />
-              <Route
-                path="/alerts"
-                element={
-                  <ComingSoon title="Alerts">
-                    Announcements and urgent alerts will show up here.
-                  </ComingSoon>
-                }
-              />
+              <Route path="/alerts" element={<Alerts />} />
               <Route
                 path="/onboarding"
                 element={

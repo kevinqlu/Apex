@@ -12,6 +12,8 @@ const paths = {
   moon: 'M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z',
   briefcase: 'M3 7h18v13H3zM9 7V4h6v3M3 13h18',
   power: 'M12 3v9M6.3 6.3a8 8 0 1 0 11.4 0',
+  megaphone:
+    'M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1zM15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12',
   chevron: 'M6 9l6 6 6-6',
   signOut: 'M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5M15 8l4 4-4 4M19 12H9',
 } as const;
