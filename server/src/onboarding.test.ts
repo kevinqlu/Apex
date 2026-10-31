@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import type { AddressInfo } from 'node:net';
+import { fileURLToPath } from 'node:url';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
 import { createApp } from './app.js';
 import { config } from './config/env.js';
@@ -15,15 +16,19 @@ import { openDb } from './db/index.js';
 import { DEMO_PASSWORD, seed } from './db/seed.js';
 
 const db = openDb(':memory:');
-const starter = loadTemplate();
+// A pinned copy of the Starter template. The real file is the company's to edit, so tests that
+// count tasks must not depend on it. One test below checks the real file is still valid.
+const starter = loadTemplate(
+  path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures/starter.template.json'),
+);
 
 function start(options: { template?: OnboardingTemplate; demoMode?: boolean } = {}) {
   const server = createApp(db, options).listen(0);
   return { server, base: () => `http://127.0.0.1:${(server.address() as AddressInfo).port}/api` };
 }
 
-const normal = start();
-const demo = start({ demoMode: true });
+const normal = start({ template: starter });
+const demo = start({ template: starter, demoMode: true });
 const withExtra = start({
   template: validateTemplate({
     phases: [{ id: 'start', title: 'Start' }],
@@ -118,6 +123,10 @@ describe('template validation', () => {
     expect(starter.tasks).toHaveLength(7);
   });
 
+  it('accepts the real template file, whatever tasks it has now', () => {
+    expect(() => loadTemplate()).not.toThrow();
+  });
+
   it('names the task and the field when something is wrong', () => {
     expect(message(template([task({ type: 'videos' })]))).toBe(
       'Onboarding template, task "t1": "type" is "videos", but it must be one of: video, upload, esign, company.',
@@ -162,7 +171,8 @@ describe('template validation', () => {
   });
 
   it('matches the task IDs the seed data uses', () => {
-    const ids = new Set(starter.tasks.map((t) => t.id));
+    // Checked against the real file, so removing a task there without updating the seed fails here.
+    const ids = new Set(loadTemplate().tasks.map((t) => t.id));
     const seeded = db.prepare('SELECT DISTINCT task_id FROM onboarding_progress').all() as {
       task_id: string;
     }[];

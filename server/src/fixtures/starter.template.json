@@ -1,0 +1,72 @@
+{
+  "name": "Starter template",
+  "phases": [
+    { "id": "start", "title": "Before your first trip" },
+    { "id": "week", "title": "Your first week" },
+    { "id": "month", "title": "Your first 30 days" }
+  ],
+  "tasks": [
+    {
+      "id": "record-check",
+      "phase": "start",
+      "title": "Driver record check",
+      "description": "We review your driving record and background. You do not need to do anything.",
+      "type": "company",
+      "ownerLabel": "Safety Department",
+      "dueDay": 2
+    },
+    {
+      "id": "cdl-upload",
+      "phase": "start",
+      "title": "Upload your commercial driver's license",
+      "description": "Take a clear photo or scan of the front and back of your license.",
+      "type": "upload",
+      "docType": "cdl",
+      "dueDay": 1
+    },
+    {
+      "id": "medical-card",
+      "phase": "start",
+      "title": "Upload your medical card",
+      "description": "Your current DOT medical examiner's certificate.",
+      "type": "upload",
+      "docType": "medical_card",
+      "dueDay": 3
+    },
+    {
+      "id": "safety-video",
+      "phase": "start",
+      "title": "Complete the safety video",
+      "description": "A short video on safe driving, loading, and what to do after an accident.",
+      "type": "video",
+      "minutes": 12,
+      "dueDay": 3
+    },
+    {
+      "id": "fleet-policy",
+      "phase": "week",
+      "title": "Sign the fleet policy",
+      "description": "Read the fleet policy, then type your full name to sign it.",
+      "type": "esign",
+      "dueDay": 5
+    },
+    {
+      "id": "equipment-walkthrough",
+      "phase": "week",
+      "title": "Equipment walkthrough",
+      "description": "Your terminal manager walks you through your truck and trailer.",
+      "type": "company",
+      "ownerLabel": "Terminal manager",
+      "dueDay": 7
+    },
+    {
+      "id": "thirty-day-checkin",
+      "phase": "month",
+      "title": "30-day check-in",
+      "description": "A short conversation about how your first month is going.",
+      "type": "company",
+      "ownerLabel": "Terminal manager",
+      "dueDay": 30
+    }
+  ]
+}
