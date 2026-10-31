@@ -16,6 +16,7 @@ export function Login() {
 
   // The server only answers when DEMO_MODE=true, so a real deployment shows nothing here.
   useEffect(() => {
+    document.title = 'Sign in | Apex';
     getDemoInfo().then(setDemo, () => setDemo(null));
   }, []);
 

@@ -16,6 +16,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { AppShell } from './components/AppShell';
 import { AuthProvider } from './components/AuthProvider';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { ComingSoon } from './components/ComingSoon';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './routes/home/Home';
@@ -28,30 +29,32 @@ import { Onboarding } from './routes/onboarding/Onboarding';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route element={<ProtectedRoute />}>
-            <Route element={<AppShell />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/loads" element={<Loads />} />
-              <Route path="/alerts" element={<Alerts />} />
-              <Route path="/onboarding" element={<Onboarding />} />
-              <Route path="/documents" element={<Documents />} />
-              <Route path="/help" element={<Help />} />
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route element={<ProtectedRoute />}>
+              <Route element={<AppShell />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/loads" element={<Loads />} />
+                <Route path="/alerts" element={<Alerts />} />
+                <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="/documents" element={<Documents />} />
+                <Route path="/help" element={<Help />} />
+              </Route>
             </Route>
-          </Route>
-          <Route
-            path="*"
-            element={
-              <ComingSoon title="Page not found">
-                Use the menu to go to a section of the portal.
-              </ComingSoon>
-            }
-          />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+            <Route
+              path="*"
+              element={
+                <ComingSoon title="Page not found">
+                  Use the menu to go to a section of the portal.
+                </ComingSoon>
+              }
+            />
+          </Routes>
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </StrictMode>,
 );

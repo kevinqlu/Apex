@@ -122,3 +122,25 @@ h2 {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* Skip link: hidden until a keyboard user tabs to it, then it is the first thing they see. */
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -4rem;
+  z-index: 10;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  background: var(--brand);
+  color: var(--brand-ink);
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+/* The page body takes focus after navigation. It is not a control, so it needs no ring. */
+main:focus {
+  outline: none;
+}
