@@ -2,7 +2,7 @@ import type { OnboardingTemplate, Task } from '../config/onboarding.js';
 import type { Db } from './index.js';
 
 // done: finished. todo: the driver has to do it. waiting: the company has to do it.
-export type TaskStatus = 'done' | 'todo' | 'waiting';
+export type TaskStatus = 'done' | 'todo' | 'waiting_on_company';
 
 export interface TaskView {
   id: string;
@@ -87,7 +87,7 @@ export function buildOnboarding(
       const note = document?.status === 'review' ? 'Under review' : undefined;
       return { ...base, status: 'done', completedAt, note };
     }
-    return { ...base, status: task.type === 'company' ? 'waiting' : 'todo' };
+    return { ...base, status: task.type === 'company' ? 'waiting_on_company' : 'todo' };
   };
 
   const phases = template.phases.map((phase) => ({

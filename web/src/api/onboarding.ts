@@ -1,6 +1,6 @@
 import { request } from './client';
 
-export type TaskStatus = 'done' | 'todo' | 'waiting';
+export type TaskStatus = 'done' | 'todo' | 'waiting_on_company';
 
 export interface OnboardingTask {
   id: string;

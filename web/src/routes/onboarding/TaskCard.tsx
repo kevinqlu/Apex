@@ -21,7 +21,7 @@ interface Props {
 const chips: Record<OnboardingTask['status'], { icon: IconName; className: string }> = {
   done: { icon: 'checkCircle', className: 'chip chip-done' },
   todo: { icon: 'circle', className: 'chip' },
-  waiting: { icon: 'hourglass', className: 'chip chip-pending' },
+  waiting_on_company: { icon: 'hourglass', className: 'chip chip-pending' },
 };
 
 // One card for every task. The template decides which tasks exist and what type each is,
@@ -48,7 +48,7 @@ export function TaskCard({ task, demoActions, onChange }: Props) {
   const statusText =
     task.status === 'done'
       ? 'Done'
-      : task.status === 'waiting'
+      : task.status === 'waiting_on_company'
         ? `Waiting on ${task.ownerLabel}`
         : 'To do';
   // A step the company owes is never the driver's fault, so it is never shown as overdue.
@@ -72,7 +72,7 @@ export function TaskCard({ task, demoActions, onChange }: Props) {
           {due.text}
         </p>
       )}
-      {task.status === 'waiting' && (
+      {task.status === 'waiting_on_company' && (
         <p className="task-due">
           Expected by {formatDay(task.dueAt)}. You do not need to do anything.
         </p>
@@ -126,7 +126,7 @@ export function TaskCard({ task, demoActions, onChange }: Props) {
         </form>
       )}
 
-      {task.status === 'waiting' && demoActions && (
+      {task.status === 'waiting_on_company' && demoActions && (
         <button
           type="button"
           className="button demo-button"

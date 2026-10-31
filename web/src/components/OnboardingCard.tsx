@@ -7,7 +7,7 @@ export function OnboardingCard({ onboarding }: { onboarding: Onboarding }) {
   const percent = total === 0 ? 100 : Math.round((done / total) * 100);
   const tasks = onboarding.phases.flatMap((p) => p.tasks);
   const next = tasks.find((t) => t.status === 'todo');
-  const waiting = tasks.some((t) => t.status === 'waiting');
+  const waiting = tasks.some((t) => t.status === 'waiting_on_company');
 
   return (
     <Link to="/onboarding" className="card onboarding-card">

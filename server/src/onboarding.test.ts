@@ -18,7 +18,7 @@ import { DEMO_PASSWORD, seed } from './db/seed.js';
 const db = openDb(':memory:');
 // A pinned copy of the Starter template. The real file is the company's to edit, so tests that
 // count tasks must not depend on it. One test below checks the real file is still valid.
-const starter = loadTemplate(
+const pinnedStarter = loadTemplate(
   path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures/starter.template.json'),
 );
 
@@ -27,13 +27,13 @@ function start(options: { template?: OnboardingTemplate; demoMode?: boolean } = 
   return { server, base: () => `http://127.0.0.1:${(server.address() as AddressInfo).port}/api` };
 }
 
-const normal = start({ template: starter });
-const demo = start({ template: starter, demoMode: true });
+const normal = start({ template: pinnedStarter });
+const demo = start({ template: pinnedStarter, demoMode: true });
 const withExtra = start({
   template: validateTemplate({
     phases: [{ id: 'start', title: 'Start' }],
     tasks: [
-      ...starter.tasks
+      ...pinnedStarter.tasks
         .filter((t) => t.id === 'safety-video')
         .map((t) => ({ ...t, phase: 'start' })),
       {
@@ -119,8 +119,8 @@ describe('template validation', () => {
   };
 
   it('accepts the starter template: 7 tasks in 3 phases', () => {
-    expect(starter.phases).toHaveLength(3);
-    expect(starter.tasks).toHaveLength(7);
+    expect(pinnedStarter.phases).toHaveLength(3);
+    expect(pinnedStarter.tasks).toHaveLength(7);
   });
 
   it('accepts the real template file, whatever tasks it has now', () => {
@@ -210,7 +210,7 @@ describe('what each driver sees', () => {
     // Due day 5, hired 5 days ago: due within the last moments of "today".
     expect(Math.abs(Date.parse(tasks['fleet-policy']!.dueAt) - Date.now())).toBeLessThan(60_000);
     // The 30-day check-in is the company's, and not due yet.
-    expect(tasks['thirty-day-checkin']?.status).toBe('waiting');
+    expect(tasks['thirty-day-checkin']?.status).toBe('waiting_on_company');
     expect(view.progress).toEqual({ done: 5, total: 7 });
   });
 
@@ -218,7 +218,7 @@ describe('what each driver sees', () => {
     const view = (await (await get(normal, anthony)).json()) as View;
     const tasks = tasksOf(view);
     expect(view.progress).toEqual({ done: 1, total: 7 });
-    expect(tasks['equipment-walkthrough']?.status).toBe('waiting');
+    expect(tasks['equipment-walkthrough']?.status).toBe('waiting_on_company');
     expect(tasks['cdl-upload']?.status).toBe('todo');
   });
 });
