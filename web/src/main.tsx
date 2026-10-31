@@ -9,6 +9,7 @@ import './styles/login.css';
 import './styles/loads.css';
 import './styles/alerts.css';
 import './styles/onboarding.css';
+import './styles/help.css';
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -20,6 +21,7 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './routes/home/Home';
 import { Alerts } from './routes/alerts/Alerts';
 import { Documents } from './routes/documents/Documents';
+import { Help } from './routes/help/Help';
 import { Loads } from './routes/loads/Loads';
 import { Login } from './routes/login/Login';
 import { Onboarding } from './routes/onboarding/Onboarding';
@@ -37,10 +39,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path="/alerts" element={<Alerts />} />
               <Route path="/onboarding" element={<Onboarding />} />
               <Route path="/documents" element={<Documents />} />
-              <Route
-                path="/help"
-                element={<ComingSoon title="Help">Support contacts will show up here.</ComingSoon>}
-              />
+              <Route path="/help" element={<Help />} />
             </Route>
           </Route>
           <Route

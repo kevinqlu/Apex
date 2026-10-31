@@ -1,0 +1,68 @@
+/* The roadside card is the loudest thing on the screen on purpose. */
+.roadside {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 3px solid var(--urgent-solid);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.roadside h2,
+.roadside p {
+  margin: 0;
+}
+
+.call {
+  justify-content: flex-start;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.call-large {
+  min-height: 64px;
+  font-size: 1.25rem;
+  background: var(--urgent-solid);
+  border-color: var(--urgent-solid);
+  color: var(--on-urgent);
+}
+
+.contact-name {
+  margin: 0.5rem 0 0;
+  font-weight: 600;
+}
+
+/* Form fields on the Help screen */
+.task-form select,
+.task-form textarea {
+  min-height: var(--tap);
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+
+.task-form [aria-invalid='true'] {
+  border-color: var(--urgent);
+}
+
+.field-hint {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  color: var(--urgent);
+  font-weight: 600;
+}
+
+.ticket .task-description {
+  white-space: pre-wrap;
+}
