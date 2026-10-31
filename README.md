@@ -23,6 +23,16 @@ With `DEMO_MODE=true` (the default in `.env.example`) the login screen lists the
 
 Sessions last 12 hours and live in an httpOnly cookie. After 5 wrong attempts for the same driver ID and IP, sign-in is blocked for 15 minutes. The server only accepts changes from the origin in `APP_ORIGIN`, so set that if you open the app from another address, such as a phone on your network.
 
+## Onboarding template (Starter template)
+
+What drivers see on the Onboarding screen comes from `server/config/onboarding.template.json`, not from code. The file that ships is a **Starter template**. It is the company's to change.
+
+- **Add, remove, or reorder** a task by editing the `tasks` list. Tasks and phases show in the order they appear in the file.
+- **Four task types:** `video` (the driver confirms they watched it), `upload` (done when a document of that `docType` exists), `esign` (the driver types their name), and `company` (done by staff, so the driver only sees "Waiting on ...").
+- **`dueDay`** is the number of days after the hire date.
+- **Restart the server** after editing. If the file has a mistake, the server will not start and prints which task and field to fix.
+- With `DEMO_MODE=true`, company steps show a dashed "Demo: mark complete" button so a walkthrough can show a step finishing. Drivers can never complete a company step otherwise.
+
 ## Commands
 
 | Command          | What it does                                 |

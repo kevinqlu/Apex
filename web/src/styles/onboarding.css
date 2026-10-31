@@ -1,0 +1,90 @@
+.onboarding-card {
+  gap: 0.5rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.onboarding-card h2,
+.onboarding-card p {
+  margin: 0;
+}
+
+.progress-text {
+  font-weight: 600;
+}
+
+/* The bar is backed by the words "5 of 7 steps done", so it never relies on color alone. */
+.progress {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--brand);
+}
+
+.task-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.task-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  line-height: 1.15;
+}
+
+.task-description,
+.task-due {
+  margin: 0;
+}
+
+.task-due {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+
+.task-overdue {
+  color: var(--urgent);
+}
+
+.chip-done {
+  background: var(--brand);
+  color: var(--brand-ink);
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-form label {
+  font-weight: 600;
+}
+
+.task-form input {
+  min-height: var(--tap);
+  padding: 0 0.75rem;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+
+/* Dashed, so the demo-only control cannot be mistaken for a real driver action. */
+.demo-button {
+  align-self: flex-start;
+  border-style: dashed;
+}
