@@ -150,7 +150,7 @@ export function seed(db: Db, now = Date.now(), uploadsDir?: string): void {
     );
     insertDriver.run(
       'D-1042',
-      'Marcus Reyes',
+      'Cody Pheng',
       hash,
       'Dallas, TX',
       'Priya Nair',
@@ -160,7 +160,7 @@ export function seed(db: Db, now = Date.now(), uploadsDir?: string): void {
     );
     insertDriver.run(
       'D-2217',
-      'Dana Whitfield',
+      'Anthony Jacob',
       hash,
       'Memphis, TN',
       'Tom Okafor',
@@ -231,13 +231,13 @@ export function seed(db: Db, now = Date.now(), uploadsDir?: string): void {
       'Terminals close early the day before the holiday. Check with your dispatcher before you plan a run.',
       at(-3 * DAY),
     );
-    // Only the lane closure is targeted, so it reaches Marcus alone.
+    // Only the lane closure is targeted, so it reaches Cody alone.
     db.prepare('INSERT INTO notification_targets (notification_id, driver_id) VALUES (?, ?)').run(
       'N-2',
       'D-1042',
     );
 
-    // Marcus has already read the older announcement, so he sees both read and unread items.
+    // Cody has already read the older announcement, so they see both read and unread items.
     db.prepare(
       'INSERT INTO notification_reads (driver_id, notification_id, read_at) VALUES (?, ?, ?)',
     ).run('D-1042', 'N-4', at(-2 * DAY));
@@ -275,7 +275,7 @@ export function seed(db: Db, now = Date.now(), uploadsDir?: string): void {
       }
     }
 
-    // One older open ticket, so the list is not empty for Marcus. Dana has none, which shows the empty state.
+    // One older open ticket, so the list is not empty for Cody. Anthony has none, which shows the empty state.
     db.prepare(
       `INSERT INTO tickets (id, driver_id, category, load_id, message, status, created_at)
        VALUES ('T-4F2A91', 'D-1042', 'equipment', NULL, ?, 'open', ?)`,
@@ -284,8 +284,8 @@ export function seed(db: Db, now = Date.now(), uploadsDir?: string): void {
       at(-DAY),
     );
 
-    // Marcus has done everything that is due except signing the fleet policy, which is due
-    // today (five days after he was hired). Dana has only had her record check.
+    // Cody has done everything that is due except signing the fleet policy, which is due
+    // today (five days after they were hired). Anthony has only had the record check.
     // These task IDs match the starter template. A test keeps them in step.
     const insertProgress = db.prepare(
       'INSERT INTO onboarding_progress (driver_id, task_id, completed_at) VALUES (?, ?, ?)',

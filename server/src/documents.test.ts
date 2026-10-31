@@ -27,8 +27,8 @@ const heic = Buffer.concat([
 ]);
 const exe = Buffer.concat([Buffer.from('MZ'), Buffer.alloc(64)]);
 
-let marcus = '';
-let dana = '';
+let cody = '';
+let anthony = '';
 
 async function signIn(driverId: string): Promise<string> {
   const res = await fetch(`${base()}/auth/login`, {
@@ -65,8 +65,8 @@ const storedFiles = () => fs.readdirSync(uploadsDir);
 
 beforeEach(async () => {
   seed(db, Date.now(), uploadsDir);
-  marcus = await signIn('D-1042');
-  dana = await signIn('D-2217');
+  cody = await signIn('D-1042');
+  anthony = await signIn('D-2217');
 });
 afterAll(() => {
   server.close();
@@ -79,19 +79,19 @@ describe('the document center', () => {
   });
 
   it('lists the required documents from the onboarding template, per driver', async () => {
-    const m = await center(marcus);
+    const m = await center(cody);
     expect(m.required.map((d) => [d.type, d.status])).toEqual([
       ['cdl', 'approved'],
       ['medical_card', 'review'],
     ]);
-    const d = await center(dana);
+    const d = await center(anthony);
     expect(d.required.map((x) => x.status)).toEqual(['missing', 'missing']);
   });
 
-  it('asks for proof of delivery on a delivered load only, and shows Marcus is missing one', async () => {
-    const m = await center(marcus);
+  it('asks for proof of delivery on a delivered load only, and shows Cody is missing one', async () => {
+    const m = await center(cody);
     expect(m.proofOfDelivery.map((p) => [p.load.id, p.status])).toEqual([['L-48190', 'missing']]);
-    expect((await center(dana)).proofOfDelivery).toEqual([]);
+    expect((await center(anthony)).proofOfDelivery).toEqual([]);
   });
 });
 
@@ -104,7 +104,7 @@ describe('uploading', () => {
       { bytes: heic, name: 'license.heic' },
     ];
     for (const file of cases) {
-      const res = await upload(dana, { type: 'cdl' }, file);
+      const res = await upload(anthony, { type: 'cdl' }, file);
       expect(res.status).toBe(201);
     }
     const stored = storedFiles().filter((name) => !name.startsWith('seed-'));
@@ -115,14 +115,14 @@ describe('uploading', () => {
   });
 
   it('puts a new upload under review and finishes the matching onboarding task', async () => {
-    const res = await upload(dana, { type: 'cdl' }, { bytes: pdf, name: 'my cdl.pdf' });
+    const res = await upload(anthony, { type: 'cdl' }, { bytes: pdf, name: 'my cdl.pdf' });
     const body = (await res.json()) as Awaited<ReturnType<typeof center>>;
     expect(body.required.find((d) => d.type === 'cdl')).toMatchObject({
       status: 'review',
       document: { originalName: 'my cdl.pdf' },
     });
     const onboarding = await (
-      await fetch(`${base()}/onboarding`, { headers: { Cookie: dana } })
+      await fetch(`${base()}/onboarding`, { headers: { Cookie: anthony } })
     ).json();
     const task = onboarding.phases
       .flatMap((p: { tasks: { id: string; status: string }[] }) => p.tasks)
@@ -131,9 +131,9 @@ describe('uploading', () => {
   });
 
   it('replaces the earlier file, and removes it from disk', async () => {
-    await upload(dana, { type: 'cdl' }, { bytes: pdf, name: 'first.pdf' });
+    await upload(anthony, { type: 'cdl' }, { bytes: pdf, name: 'first.pdf' });
     const first = storedFiles().filter((n) => !n.startsWith('seed-'));
-    await upload(dana, { type: 'cdl' }, { bytes: png, name: 'second.png' });
+    await upload(anthony, { type: 'cdl' }, { bytes: png, name: 'second.png' });
     const second = storedFiles().filter((n) => !n.startsWith('seed-'));
     expect(second).toHaveLength(1);
     expect(second[0]).not.toBe(first[0]);
@@ -146,7 +146,7 @@ describe('uploading', () => {
   it('rejects a 20 MB file with a plain message, and stores nothing', async () => {
     const big = Buffer.concat([Buffer.from('%PDF-'), Buffer.alloc(20 * 1024 * 1024)]);
     const before = storedFiles();
-    const res = await upload(dana, { type: 'cdl' }, { bytes: big, name: 'huge.pdf' });
+    const res = await upload(anthony, { type: 'cdl' }, { bytes: big, name: 'huge.pdf' });
     expect(res.status).toBe(413);
     expect((await res.json()).error.message).toBe('That file is too large. The limit is 10 MB.');
     expect(storedFiles()).toEqual(before);
@@ -155,31 +155,31 @@ describe('uploading', () => {
   it('rejects an .exe, and a program renamed to .pdf, with a plain message', async () => {
     const before = storedFiles();
     for (const name of ['setup.exe', 'invoice.pdf']) {
-      const res = await upload(dana, { type: 'cdl' }, { bytes: exe, name });
+      const res = await upload(anthony, { type: 'cdl' }, { bytes: exe, name });
       expect(res.status).toBe(415);
       expect((await res.json()).error.message).toBe(
         'That file type is not allowed. Upload a PDF, JPG, PNG, or HEIC file.',
       );
     }
     expect(storedFiles()).toEqual(before);
-    expect((await center(dana)).required[0]?.status).toBe('missing');
+    expect((await center(anthony)).required[0]?.status).toBe('missing');
   });
 
   it('rejects a real PDF that is named like a program', async () => {
-    const res = await upload(dana, { type: 'cdl' }, { bytes: pdf, name: 'license.exe' });
+    const res = await upload(anthony, { type: 'cdl' }, { bytes: pdf, name: 'license.exe' });
     expect(res.status).toBe(415);
   });
 
   it('rejects a missing file and a document type that is not on the list', async () => {
-    expect((await upload(dana, { type: 'cdl' })).status).toBe(400);
-    const res = await upload(dana, { type: 'passport' }, { bytes: pdf, name: 'a.pdf' });
+    expect((await upload(anthony, { type: 'cdl' })).status).toBe(400);
+    const res = await upload(anthony, { type: 'passport' }, { bytes: pdf, name: 'a.pdf' });
     expect(res.status).toBe(400);
     expect((await res.json()).error.message).toBe('That kind of document is not on your list.');
   });
 
   it('only takes an upload that comes from the app’s own origin', async () => {
     const res = await upload(
-      dana,
+      anthony,
       { type: 'cdl' },
       { bytes: pdf, name: 'a.pdf' },
       'https://evil.example',
@@ -191,7 +191,7 @@ describe('uploading', () => {
 describe('proof of delivery', () => {
   it('attaches to a delivered load and clears the missing flag', async () => {
     const res = await upload(
-      marcus,
+      cody,
       { type: 'proof_of_delivery', loadId: 'L-48190' },
       { bytes: jpeg, name: 'pod.jpg' },
     );
@@ -202,7 +202,7 @@ describe('proof of delivery', () => {
 
   it('is refused for a load that is not delivered', async () => {
     const res = await upload(
-      marcus,
+      cody,
       { type: 'proof_of_delivery', loadId: 'L-48213' },
       { bytes: jpeg, name: 'pod.jpg' },
     );
@@ -211,13 +211,14 @@ describe('proof of delivery', () => {
 
   it('is refused, as not found, for another driver’s load', async () => {
     const res = await upload(
-      dana,
+      anthony,
       { type: 'proof_of_delivery', loadId: 'L-48190' },
       { bytes: jpeg, name: 'pod.jpg' },
     );
     expect(res.status).toBe(404);
     expect(
-      (await upload(dana, { type: 'proof_of_delivery' }, { bytes: jpeg, name: 'pod.jpg' })).status,
+      (await upload(anthony, { type: 'proof_of_delivery' }, { bytes: jpeg, name: 'pod.jpg' }))
+        .status,
     ).toBe(404);
   });
 });
@@ -227,13 +228,13 @@ describe('downloading', () => {
     fetch(`${base()}/documents/${id}/file`, { headers: cookie ? { Cookie: cookie } : {} });
 
   it('requires a session', async () => {
-    const id = (await center(marcus)).required[0]!.document!.id;
+    const id = (await center(cody)).required[0]!.document!.id;
     expect((await get(undefined, id)).status).toBe(401);
   });
 
   it('gives a driver their own file, as a download', async () => {
-    const doc = (await center(marcus)).required.find((d) => d.type === 'medical_card')!.document!;
-    const res = await get(marcus, doc.id);
+    const doc = (await center(cody)).required.find((d) => d.type === 'medical_card')!.document!;
+    const res = await get(cody, doc.id);
     expect(res.status).toBe(200);
     expect(res.headers.get('content-disposition')).toContain('attachment');
     expect(res.headers.get('x-content-type-options')).toBe('nosniff');
@@ -241,11 +242,9 @@ describe('downloading', () => {
   });
 
   it('does not give one driver another driver’s file, and cannot tell if it exists', async () => {
-    const theirs = (await center(marcus)).required.find(
-      (d) => d.type === 'medical_card',
-    )!.document!;
-    const refused = await get(dana, theirs.id);
-    const missing = await get(dana, 'DOC-nothing');
+    const theirs = (await center(cody)).required.find((d) => d.type === 'medical_card')!.document!;
+    const refused = await get(anthony, theirs.id);
+    const missing = await get(anthony, 'DOC-nothing');
     expect(refused.status).toBe(404);
     expect(missing.status).toBe(404);
     expect(await refused.json()).toEqual(await missing.json());
@@ -253,7 +252,7 @@ describe('downloading', () => {
 
   it('does not expose the uploads folder directly', async () => {
     const stored = storedFiles()[0]!;
-    const res = await fetch(`${base()}/uploads/${stored}`, { headers: { Cookie: marcus } });
+    const res = await fetch(`${base()}/uploads/${stored}`, { headers: { Cookie: cody } });
     expect(res.status).toBe(404);
   });
 });

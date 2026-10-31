@@ -11,15 +11,15 @@ A script for showing the portal on a phone. Every step below was run end to end 
 
 Say at the start: the company and the drivers are fictional, and everything you see comes from the server, one driver at a time.
 
-## 0:00 Sign in as Marcus
+## 0:00 Sign in as Cody
 
 - Type a wrong password first. The error is plain and does not say which part was wrong.
-- Tap **Fill in Marcus Reyes (D-1042)**, then **Sign in**.
+- Tap **Fill in Cody Pheng (D-1042)**, then **Sign in**.
 - Refresh the page. You stay signed in.
 
 ## 0:45 Home
 
-- **Two red urgent banners** sit at the top until read. One of them, the lane closure, was sent only to Marcus.
+- **Two red urgent banners** sit at the top until read. One of them, the lane closure, was sent only to Cody.
 - Tap **Mark as read** on one. The banner goes and the badge on the Alerts tab drops from 3 to 2.
 - **Duty status.** Tap **Driving**. Remember this for the signing step later.
 - **Active load.** The route strip shows Dallas to Atlanta with the truck about 40% of the way. Tap **Show details** to see pickup, delivery, cargo, weight, equipment and reference.
@@ -34,7 +34,7 @@ Say at the start: the company and the drivers are fictional, and everything you 
 
 - Three phases from a template file. Company steps say **Waiting on Terminal manager** and tell the driver there is nothing to do. They are never shown as the driver's task.
 - With duty status on Driving, the signing form shows **Park safely before filling this out**. It is a notice and never blocks.
-- Type a wrong name and tap **Sign with my name**. The error is plain and the typed text stays. Type **Marcus Reyes** and sign. The count goes to 6 of 7.
+- Type a wrong name and tap **Sign with my name**. The error is plain and the typed text stays. Type **Cody Pheng** and sign. The count goes to 6 of 7.
 - Point out that the whole checklist comes from `server/config/onboarding.template.json`. Adding a task there changes this screen with no code change.
 
 ## 3:45 Documents
@@ -48,11 +48,11 @@ Say at the start: the company and the drivers are fictional, and everything you 
 - The **roadside call button** is first and the biggest thing on the screen. It is a real phone link, and the number is shown as text too.
 - Send a short message. It shows a ticket number and appears at the top of the list.
 
-## 4:50 Sign in as Dana, the proof
+## 4:50 Sign in as Anthony, the proof
 
-- Tap **Sign out**, then sign in as **Dana Whitfield (D-2217)**.
-- Different loads, different dispatcher, no tickets, and no lane closure alert. Her onboarding and documents screens show real work still to do.
-- Marcus reading his alerts earlier changed nothing for her. Each driver's data and read state are separate, and the server enforces it.
+- Tap **Sign out**, then sign in as **Anthony Jacob (D-2217)**.
+- Different loads, different dispatcher, no tickets, and no lane closure alert. Onboarding and Documents show real work still to do.
+- Cody reading the alerts earlier changed nothing for Anthony. Each driver's data and read state are separate, and the server enforces it.
 
 ## If something goes wrong
 

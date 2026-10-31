@@ -78,12 +78,12 @@ interface View {
 const tasksOf = (view: View) =>
   Object.fromEntries(view.phases.flatMap((p) => p.tasks).map((t) => [t.id, t]));
 
-let marcus = '';
-let dana = '';
+let cody = '';
+let anthony = '';
 beforeEach(async () => {
   seed(db);
-  marcus = await signIn(normal, 'D-1042');
-  dana = await signIn(normal, 'D-2217');
+  cody = await signIn(normal, 'D-1042');
+  anthony = await signIn(normal, 'D-2217');
 });
 afterAll(() => {
   for (const app of [normal, demo, withExtra]) app.server.close();
@@ -177,7 +177,7 @@ describe('what each driver sees', () => {
   });
 
   it('keeps the order of the template file', async () => {
-    const view = (await (await get(normal, marcus)).json()) as View;
+    const view = (await (await get(normal, cody)).json()) as View;
     expect(view.phases.map((p) => p.id)).toEqual(['start', 'week', 'month']);
     expect(view.phases.flatMap((p) => p.tasks.map((t) => t.id))).toEqual([
       'record-check',
@@ -190,8 +190,8 @@ describe('what each driver sees', () => {
     ]);
   });
 
-  it('shows Marcus done except the fleet policy, which is due today', async () => {
-    const view = (await (await get(normal, marcus)).json()) as View;
+  it('shows Cody done except the fleet policy, which is due today', async () => {
+    const view = (await (await get(normal, cody)).json()) as View;
     const tasks = tasksOf(view);
     expect(tasks['fleet-policy']?.status).toBe('todo');
     expect(tasks['safety-video']?.status).toBe('done');
@@ -204,8 +204,8 @@ describe('what each driver sees', () => {
     expect(view.progress).toEqual({ done: 5, total: 7 });
   });
 
-  it('shows Dana almost nothing done, and a company step as waiting, not hers to do', async () => {
-    const view = (await (await get(normal, dana)).json()) as View;
+  it('shows Anthony almost nothing done, and a company step as waiting, not theirs to do', async () => {
+    const view = (await (await get(normal, anthony)).json()) as View;
     const tasks = tasksOf(view);
     expect(view.progress).toEqual({ done: 1, total: 7 });
     expect(tasks['equipment-walkthrough']?.status).toBe('waiting');
@@ -215,7 +215,7 @@ describe('what each driver sees', () => {
 
 describe('completing tasks', () => {
   it('lets a driver confirm a video', async () => {
-    const res = await post(normal, dana, 'tasks/safety-video/complete');
+    const res = await post(normal, anthony, 'tasks/safety-video/complete');
     expect(res.status).toBe(200);
     expect(tasksOf((await res.json()) as View)['safety-video']?.status).toBe('done');
   });
@@ -238,45 +238,45 @@ describe('completing tasks', () => {
   });
 
   it('does not let a driver mark an upload task done by hand', async () => {
-    const res = await post(normal, dana, 'tasks/cdl-upload/complete');
+    const res = await post(normal, anthony, 'tasks/cdl-upload/complete');
     expect(res.status).toBe(400);
-    expect(tasksOf((await (await get(normal, dana)).json()) as View)['cdl-upload']?.status).toBe(
+    expect(tasksOf((await (await get(normal, anthony)).json()) as View)['cdl-upload']?.status).toBe(
       'todo',
     );
   });
 
   it('signs only when the typed name matches the driver', async () => {
-    const wrong = await post(normal, marcus, 'tasks/fleet-policy/complete', {
-      name: 'Dana Whitfield',
+    const wrong = await post(normal, cody, 'tasks/fleet-policy/complete', {
+      name: 'Anthony Jacob',
     });
     expect(wrong.status).toBe(400);
     expect((await wrong.json()).error.message).toMatch(/does not match your name on file/);
-    expect((await post(normal, marcus, 'tasks/fleet-policy/complete', {})).status).toBe(400);
+    expect((await post(normal, cody, 'tasks/fleet-policy/complete', {})).status).toBe(400);
 
-    const right = await post(normal, marcus, 'tasks/fleet-policy/complete', {
-      name: '  marcus   REYES ',
+    const right = await post(normal, cody, 'tasks/fleet-policy/complete', {
+      name: '  cody   PHENG ',
     });
     expect(right.status).toBe(200);
     expect(tasksOf((await right.json()) as View)['fleet-policy']?.status).toBe('done');
   });
 
   it('keeps one driver’s progress out of another’s', async () => {
-    await post(normal, marcus, 'tasks/fleet-policy/complete', { name: 'Marcus Reyes' });
-    const dana1 = tasksOf((await (await get(normal, dana)).json()) as View);
-    expect(dana1['fleet-policy']?.status).toBe('todo');
+    await post(normal, cody, 'tasks/fleet-policy/complete', { name: 'Cody Pheng' });
+    const anthony1 = tasksOf((await (await get(normal, anthony)).json()) as View);
+    expect(anthony1['fleet-policy']?.status).toBe('todo');
   });
 
   it('answers an unknown task with 404', async () => {
-    expect((await post(normal, marcus, 'tasks/nope/complete')).status).toBe(404);
+    expect((await post(normal, cody, 'tasks/nope/complete')).status).toBe(404);
   });
 });
 
 describe('the demo-only company button', () => {
   it('does not exist unless demo mode is on', async () => {
-    expect((await post(normal, dana, 'tasks/equipment-walkthrough/demo-complete')).status).toBe(
+    expect((await post(normal, anthony, 'tasks/equipment-walkthrough/demo-complete')).status).toBe(
       404,
     );
-    expect(((await (await get(normal, dana)).json()) as View).demoActions).toBe(false);
+    expect(((await (await get(normal, anthony)).json()) as View).demoActions).toBe(false);
   });
 
   it('finishes a company task in demo mode, and only a company task', async () => {

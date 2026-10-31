@@ -31,8 +31,8 @@ The web app is at http://localhost:5173 and the API at http://localhost:3001. On
 
 With `DEMO_MODE=true` (the default in `.env.example`) the sign-in screen lists two demo drivers and fills in the form for you. The demo password is `apex-demo-1`.
 
-- **Marcus Reyes, D-1042.** Hired 5 days ago. A load in transit, a delayed one, a pending one, and a delivered one with no proof of delivery. Two urgent alerts. Onboarding is done except signing the fleet policy, due today.
-- **Dana Whitfield, D-2217.** Hired yesterday. One pending load and almost nothing complete, so the Onboarding and Documents screens have real work on them.
+- **Cody Pheng, D-1042.** Hired 5 days ago. A load in transit, a delayed one, a pending one, and a delivered one with no proof of delivery. Two urgent alerts. Onboarding is done except signing the fleet policy, due today.
+- **Anthony Jacob, D-2217.** Hired yesterday. One pending load and almost nothing complete, so the Onboarding and Documents screens have real work on them.
 
 Signing in as each shows different loads, alerts, tickets and documents. That is the proof that data is scoped to the signed-in driver.
 

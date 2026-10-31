@@ -5,7 +5,7 @@ import { buildOnboarding, recordCompletion } from '../db/onboarding.js';
 import { currentDriver } from '../middleware/auth.js';
 import { sendError } from '../middleware/errors.js';
 
-// "Marcus  REYES" and "marcus reyes" both count as Marcus Reyes.
+// "Cody  PHENG" and "cody pheng" both count as Cody Pheng.
 const normalizeName = (name: string) => name.trim().replace(/\s+/g, ' ').toLowerCase();
 
 // Mounted behind requireSession. The driver comes from the session, never from the request.

@@ -9,8 +9,8 @@ const db = openDb(':memory:');
 const server = createApp(db).listen(0);
 const base = () => `http://127.0.0.1:${(server.address() as AddressInfo).port}/api`;
 
-let marcus = '';
-let dana = '';
+let cody = '';
+let anthony = '';
 
 async function signIn(driverId: string): Promise<string> {
   const res = await fetch(`${base()}/auth/login`, {
@@ -33,8 +33,8 @@ const patch = (path: string, body: unknown, cookie: string) =>
 
 beforeAll(async () => {
   seed(db);
-  marcus = await signIn('D-1042');
-  dana = await signIn('D-2217');
+  cody = await signIn('D-1042');
+  anthony = await signIn('D-2217');
 });
 afterAll(() => {
   server.close();
@@ -47,10 +47,10 @@ describe('loads are scoped to the signed-in driver', () => {
   });
 
   it('shows each driver only their own loads', async () => {
-    const marcusIds = ((await (await get('/loads', marcus)).json()).loads as { id: string }[]).map(
+    const marcusIds = ((await (await get('/loads', cody)).json()).loads as { id: string }[]).map(
       (l) => l.id,
     );
-    const danaIds = ((await (await get('/loads', dana)).json()).loads as { id: string }[]).map(
+    const danaIds = ((await (await get('/loads', anthony)).json()).loads as { id: string }[]).map(
       (l) => l.id,
     );
     expect(marcusIds).toHaveLength(4);
@@ -58,17 +58,17 @@ describe('loads are scoped to the signed-in driver', () => {
   });
 
   it('returns 404, not 403, when a driver asks for another driver’s load', async () => {
-    // L-48213 is Marcus's. Dana asking for it must look the same as asking for a load that does not exist.
-    const theirs = await get('/loads/L-48213', dana);
-    const missing = await get('/loads/L-00000', dana);
+    // L-48213 is Cody's. Anthony asking for it must look the same as asking for a load that does not exist.
+    const theirs = await get('/loads/L-48213', anthony);
+    const missing = await get('/loads/L-00000', anthony);
     expect(theirs.status).toBe(404);
     expect(missing.status).toBe(404);
     expect(await theirs.json()).toEqual(await missing.json());
-    expect((await get('/loads/L-48213', marcus)).status).toBe(200);
+    expect((await get('/loads/L-48213', cody)).status).toBe(200);
   });
 
   it('returns every field the driver needs to see', async () => {
-    const { load } = await (await get('/loads/L-48230', marcus)).json();
+    const { load } = await (await get('/loads/L-48230', cody)).json();
     expect(load).toMatchObject({
       id: 'L-48230',
       status: 'delayed',
@@ -85,7 +85,7 @@ describe('loads are scoped to the signed-in driver', () => {
   });
 
   it('puts the truck about 40% along a load in transit, and at the ends otherwise', async () => {
-    const { loads } = (await (await get('/loads', marcus)).json()) as {
+    const { loads } = (await (await get('/loads', cody)).json()) as {
       loads: { id: string; progress: number }[];
     };
     const progress = Object.fromEntries(loads.map((l) => [l.id, l.progress]));
@@ -99,15 +99,15 @@ describe('loads are scoped to the signed-in driver', () => {
 
 describe('duty status', () => {
   it('changes only the signed-in driver', async () => {
-    const res = await patch('/me/duty-status', { dutyStatus: 'driving' }, marcus);
+    const res = await patch('/me/duty-status', { dutyStatus: 'driving' }, cody);
     expect(res.status).toBe(200);
     expect((await res.json()).driver.dutyStatus).toBe('driving');
-    const danaNow = await (await get('/auth/me', dana)).json();
+    const danaNow = await (await get('/auth/me', anthony)).json();
     expect(danaNow.driver.dutyStatus).toBe('off_duty');
   });
 
   it('rejects a status that does not exist', async () => {
-    const res = await patch('/me/duty-status', { dutyStatus: 'napping' }, marcus);
+    const res = await patch('/me/duty-status', { dutyStatus: 'napping' }, cody);
     expect(res.status).toBe(400);
     expect((await res.json()).error.message).toMatch(/Driving, On duty, Sleeper, or Off duty/);
   });

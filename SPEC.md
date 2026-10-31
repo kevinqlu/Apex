@@ -136,8 +136,8 @@ The company has onboarding problems and wants to adjust the process. So onboardi
 ## 9. Seed data (relative to now)
 
 Two drivers (demo credentials shown on the login screen **in demo mode only**):
-- **Marcus Reyes, D-1042**: hired 5 days ago. One load in transit (about 40% along), one delayed pickup with a delay note, one pending, one delivered 2 days ago **missing its proof of delivery**. Unread: two urgent alerts (weather, plus a lane closure targeted only at him) and one announcement. Onboarding: all done except "Sign the fleet policy," due today. Medical card under review.
-- **Dana Whitfield, D-2217**: hired 1 day ago. One pending load. Almost nothing complete, so the onboarding and documents screens show real work.
+- **Cody Pheng, D-1042**: hired 5 days ago. One load in transit (about 40% along), one delayed pickup with a delay note, one pending, one delivered 2 days ago **missing its proof of delivery**. Unread: two urgent alerts (weather, plus a lane closure targeted only at him) and one announcement. Onboarding: all done except "Sign the fleet policy," due today. Medical card under review.
+- **Anthony Jacob, D-2217**: hired 1 day ago. One pending load. Almost nothing complete, so the onboarding and documents screens show real work.
 
 Logging in as each must show different loads. That is the proof that scoping works.
 
@@ -152,10 +152,10 @@ Done when: a fresh clone runs `npm install && npm run dev`, `npm run seed` reset
 Done when: a wrong password shows a generic error; refresh keeps you signed in; signing out ends the session server-side; unauthenticated API calls return 401.
 
 **Slice 2: Dashboard, duty status, loads.** Dashboard (greeting, duty selector, active load), loads list with Current/Delivered tabs, expandable details, route strip, all four statuses.
-Done when: Marcus and Dana see different loads; requesting another driver's load ID returns 404; every required load field is visible.
+Done when: Cody and Anthony see different loads; requesting another driver's load ID returns 404; every required load field is visible.
 
 **Slice 3: Notifications.** List, filter (All/Urgent/Announcements/Unread), expand to read, mark read (per driver), mark all read, unread badge on nav, urgent banner and recent unread on the dashboard.
-Done when: marking read as Marcus does not change Dana's unread state.
+Done when: marking read as Cody does not change Anthony's unread state.
 
 **Slice 4: Onboarding engine.** Template loader + validator (fails fast with a clear message on a bad template), phase grouping, task types, owner handling, due dates, dashboard progress card.
 Done when: adding a task to the JSON template changes the UI with no code change; a driver cannot complete a company task via the API.
