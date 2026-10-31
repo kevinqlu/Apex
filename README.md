@@ -6,15 +6,16 @@ A proof-of-concept driver portal for Apex Logistics & Transportation Solutions, 
 
 ## What it does
 
-| Requirement                          | Where                                                                     |
-| ------------------------------------ | ------------------------------------------------------------------------- |
-| Remote login, session persistence    | Sign-in screen, 12-hour session cookie, sign out ends it on the server    |
-| Announcements, urgent alerts, unread | Alerts screen, urgent banner on Home, per-driver read state, unread badge |
-| Assigned loads with all metadata     | Loads screen, four statuses, route strip with a truck marker              |
-| Dashboard                            | Home: duty status, active load, urgent alerts, onboarding progress        |
-| Onboarding checklist                 | Driven by a JSON template, so the company can change it without code      |
-| Document center                      | Required documents, proof of delivery per load, upload, replace, download |
-| Support                              | One-tap emergency roadside call, dispatcher and terminal, message form    |
+| Requirement                          | Where                                                                                   |
+| ------------------------------------ | --------------------------------------------------------------------------------------- |
+| Remote login, session persistence    | Sign-in screen, 12-hour session cookie, sign out ends it on the server                  |
+| Announcements, urgent alerts, unread | Alerts screen, urgent banner on Home, per-driver read state, unread badge               |
+| Assigned loads with all metadata     | Loads screen, four statuses, route strip with a truck marker                            |
+| Dashboard                            | Home: duty status, active load, urgent alerts, onboarding progress                      |
+| Onboarding checklist                 | Driven by a JSON template, so the company can change it without code                    |
+| Document center                      | Required documents, proof of delivery per load, upload, replace, download               |
+| Live map (stretch)                   | Map screen from the active load: simulated truck, timeline, "Simulated positions" label |
+| Support                              | One-tap emergency roadside call, dispatcher and terminal, message form                  |
 
 ## Run it
 
@@ -116,6 +117,8 @@ These go in the environment (see `.env.example`):
 | `APP_ORIGIN`                   | The public address of the app. The server only accepts changes that come from it. Several addresses can be listed, separated by commas. |
 | `DEMO_MODE`                    | `true` shows the demo drivers and the demo buttons. Leave it `false` for anything real.                                                 |
 | `TRUST_PROXY`                  | Set to `1` behind a host that forwards requests, so the sign-in limit sees real addresses.                                              |
+| `TRACKING_PROVIDER`            | `mock` (default) draws a simulated truck. `samsara` is a stub that is not connected. Positions are never real.                          |
+| `TRACKING_SPEEDUP`             | How much faster than real time the simulated truck moves. 1000 in demo mode so it visibly moves, then it loops back to the start.       |
 | `UPLOADS_DIR`, `DATABASE_PATH` | Where files and the database live. Use storage that survives restarts for anything real.                                                |
 
 `npm run build` then `npm start` also serves everything from one address on your own computer, which keeps the session cookie same-site. The server runs TypeScript directly with `tsx`, so install with dev dependencies. Moving to several instances would need a shared database and shared session and file storage.
@@ -150,6 +153,7 @@ These are cuts made for scope, not things that were missed:
 - A back office. Alerts and tickets come from seed data, and staff steps are finished with the demo button.
 - Cloud file storage. Uploads go to a local folder and are served only through an authenticated route.
 - Translations, and working offline.
+- Real Samsara tracking, route weather, and a map of every driver. The last is a dispatcher view and needs staff roles. The map here shows one driver's own load, with simulated positions behind a `TrackingProvider` interface a real provider can replace.
 - A template editor for onboarding. Editing the JSON file is the intended step for now, and a small admin screen is the natural next one.
 
 ## Layout

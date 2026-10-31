@@ -61,6 +61,6 @@ Multer keeps the file in memory with a 10 MB limit. The server checks the extens
 
 `db/seed.ts` builds two drivers with loads, alerts, tickets and documents, all dated relative to now. `npm run seed` resets in place. On Render, `npm run start:demo` seeds on every start.
 
-## Not built yet
+## Live tracking (simulated)
 
-Live tracking (`SPEC.md` Slice 7) is not built. When it is, positions come from a `TrackingProvider` interface and a simulated provider, and the endpoint takes no driver or load ID from the client.
+`GET /api/tracking/active-load` returns the signed-in driver's own active load and a position. The request carries no driver or load ID. The position comes from a `TrackingProvider` (`server/src/tracking/`). `MockProvider` computes it from the load's pickup and delivery times along a straight line between two cities from `cities.ts`, so nothing is stored. In demo mode `TRACKING_SPEEDUP` makes it move fast enough to see, and the truck loops back to the start after it arrives. `SamsaraProvider` is a stub that throws "not configured", which the route turns into a plain 503 message. The web `routes/map/` screen polls every 10 seconds, draws the route with Leaflet and OpenStreetMap, and shows a timeline. It always labels positions as simulated.
