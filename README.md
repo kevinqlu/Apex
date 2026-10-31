@@ -157,3 +157,18 @@ These are cuts made for scope, not things that were missed:
 - `web/` is the React app (Vite, TypeScript, React Router). Screens are in `routes/`, shared pieces in `components/`, the typed API client in `api/`.
 - `server/` is the Express API with a SQLite database (better-sqlite3). Routes are in `routes/`, auth and request checks in `middleware/`, data access and the seed in `db/`.
 - `docs/walkthrough.md` is the five-minute demo script.
+- `docs/architecture.md` is a one-page tour of the modules, data flow, auth flow and where authorization lives.
+
+## Where to look
+
+| If you want to see...                        | Open                                                                                   |
+| -------------------------------------------- | -------------------------------------------------------------------------------------- |
+| How the pieces fit                           | `docs/architecture.md`                                                                 |
+| What was asked for and in what order         | `SPEC.md`                                                                              |
+| How sign-in and sessions work                | `server/src/routes/auth.ts`, `server/src/middleware/auth.ts`                           |
+| Where one driver is kept from another's data | `server/src/db/loads.ts` (`findLoad`), and `loads.test.ts`                             |
+| The onboarding checklist definition          | `server/config/onboarding.template.json`, checked by `server/src/config/onboarding.ts` |
+| How uploads are checked                      | `server/src/uploads/fileType.ts`, `server/src/routes/documents.ts`                     |
+| A screen and how it loads data               | `web/src/routes/loads/Loads.tsx`, `web/src/lib/useResource.ts`                         |
+| The demo data                                | `server/src/db/seed.ts`                                                                |
+| What the tests prove                         | The `*.test.ts` files in `server/src/`, one per area                                   |
