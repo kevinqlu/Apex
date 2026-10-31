@@ -6,7 +6,11 @@ coverage/
 *.db
 *.db-shm
 *.db-wal
-data/
-uploads/
+# Anchored to where they really live. A bare "uploads/" would also hide the source folder
+# server/src/uploads/, and the code in it would never be committed.
+/data/
+/server/data/
+/uploads/
+/server/uploads/
 .DS_Store
 *.log

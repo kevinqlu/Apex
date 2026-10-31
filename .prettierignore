@@ -1,7 +1,9 @@
 node_modules
 dist
-data
-uploads
+/data
+/server/data
+/uploads
+/server/uploads
 package-lock.json
 SPEC.md
 CLAUDE.md
