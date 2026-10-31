@@ -6,7 +6,7 @@ A script for showing the portal on a phone. Every step below was run end to end 
 
 1. Run `npm run seed` right before the demo. It resets the data and makes the dates relative to now, so the truck is about 40% along its route and the fleet policy is due today.
 2. Run `npm run dev`, then open the app.
-3. To show it on a real phone, put the phone on the same network, set `APP_ORIGIN` in `.env` to the address you open on the phone (for example `http://192.168.1.20:5173`), and restart.
+3. To show it on a real phone, follow "Open it on a phone" in the README first. The phone and the computer must be on the same Wi-Fi.
 4. Have a small PDF or a photo on the phone for the upload step.
 
 Say at the start: the company and the drivers are fictional, and everything you see comes from the server, one driver at a time.

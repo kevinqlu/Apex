@@ -36,6 +36,17 @@ With `DEMO_MODE=true` (the default in `.env.example`) the sign-in screen lists t
 
 Signing in as each shows different loads, alerts, tickets and documents. That is the proof that data is scoped to the signed-in driver.
 
+## Open it on a phone
+
+Do this once per network. The phone and the computer must be on the same Wi-Fi.
+
+1. Find the computer's address. On Windows, run `ipconfig` and read the IPv4 Address, such as `192.168.1.20`.
+2. In `.env`, list that address after the usual one, separated by a comma: `APP_ORIGIN=http://localhost:5173,http://192.168.1.20:5173`. The server only accepts changes from addresses in this list.
+3. Restart with `npm run dev`. The first time, Windows asks whether Node.js may use the network. Choose **Private networks** and allow it.
+4. On the phone, open `http://192.168.1.20:5173` (your own address) in the browser.
+
+The address can change when the router restarts. If the phone cannot sign in, check this list first.
+
 ## Commands
 
 | Command          | What it does                                                   |
@@ -67,18 +78,47 @@ What drivers see on the Onboarding screen comes from `server/config/onboarding.t
 - **Onboarding.** A driver cannot complete a company task. A malformed template fails with a message that names the task and field.
 - **Uploads.** An oversize file and a disallowed type are refused, including a program renamed to `.pdf`.
 
-## Production and hosting
+## Deploy the demo (Render)
 
-`npm run build` then `npm start` serves everything from one address, which keeps the session cookie same-site. These settings go in the environment (see `.env.example`):
+`render.yaml` describes the site, so Render sets it up for you. Only the `main` branch deploys, so slices must be merged to `main` first.
 
-| Setting                        | Why                                                                                        |
-| ------------------------------ | ------------------------------------------------------------------------------------------ |
-| `APP_ORIGIN`                   | The public address of the app. The server only accepts changes that come from it.          |
-| `DEMO_MODE`                    | `true` shows the demo drivers and the demo buttons. Leave it `false` for anything real.    |
-| `TRUST_PROXY`                  | Set to `1` behind a host that forwards requests, so the sign-in limit sees real addresses. |
-| `UPLOADS_DIR`, `DATABASE_PATH` | Where files and the database live. Use storage that survives restarts.                     |
+1. Push `main` to GitHub, including `render.yaml`.
+2. On [render.com](https://render.com), sign in with GitHub. Choose **New**, then **Blueprint**, pick this repo, and apply it.
+3. Wait for the first deploy to finish. Render shows the public address, such as `https://apex-driver-portal.onrender.com`.
+4. Open it and sign in with a demo driver. Then make the QR code (below).
 
-The server runs TypeScript directly with `tsx`, so install with dev dependencies on the host. The database is a single SQLite file, which suits one instance. Moving to several instances would need a shared database and shared session and file storage.
+Render builds with `npm ci --include=dev && npm run build` and starts with `npm run start:demo`, which resets the demo data and starts the server. It sets `RENDER_EXTERNAL_URL` itself, so no address needs typing in.
+
+**What to expect on the free plan:**
+
+- **It sleeps after 15 minutes without a visit.** The first visit afterwards takes about a minute. Open the site yourself a few minutes before a demo.
+- **The disk starts empty on every wake-up.** The data is seeded again each time, with dates relative to now, so it always looks fresh. Anything people did (uploads, tickets, signed forms) is gone after a sleep or a redeploy, which suits a demo.
+- **Everything runs as one instance.** That is what the SQLite database, the in-memory sign-in limit, and local files need.
+
+**Other hosts.** Any host that runs a Node server works. Use `npm ci --include=dev && npm run build` to build and `npm run start:demo` to start, and set `NODE_VERSION` to 22, `DEMO_MODE=true`, `TRUST_PROXY=1`, and `APP_ORIGIN` to the site's public address.
+
+### The QR code
+
+Once the site has an address, make the code with:
+
+```
+npx qrcode -o apex-qr.png -w 600 "https://apex-driver-portal.onrender.com"
+```
+
+Use your own address. Put the image on a slide, and save it outside this folder so it does not get committed. Scan it with a phone before the demo to be sure it opens the sign-in screen.
+
+## Settings
+
+These go in the environment (see `.env.example`):
+
+| Setting                        | Why                                                                                                                                     |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `APP_ORIGIN`                   | The public address of the app. The server only accepts changes that come from it. Several addresses can be listed, separated by commas. |
+| `DEMO_MODE`                    | `true` shows the demo drivers and the demo buttons. Leave it `false` for anything real.                                                 |
+| `TRUST_PROXY`                  | Set to `1` behind a host that forwards requests, so the sign-in limit sees real addresses.                                              |
+| `UPLOADS_DIR`, `DATABASE_PATH` | Where files and the database live. Use storage that survives restarts for anything real.                                                |
+
+`npm run build` then `npm start` also serves everything from one address on your own computer, which keeps the session cookie same-site. The server runs TypeScript directly with `tsx`, so install with dev dependencies. Moving to several instances would need a shared database and shared session and file storage.
 
 ## Setup on a new machine
 

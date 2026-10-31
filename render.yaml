@@ -1,0 +1,20 @@
+# Render blueprint for the demo site. Render: New, Blueprint, pick this repo.
+# Only main should deploy, so the branch is named here.
+services:
+  - type: web
+    name: apex-driver-portal
+    runtime: node
+    plan: free
+    branch: main
+    # The build needs the dev dependencies (TypeScript, Vite), which npm skips in production.
+    buildCommand: npm ci --include=dev && npm run build
+    # The free plan starts with an empty disk each time, so the demo data is seeded on boot.
+    startCommand: npm run start:demo
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: '22'
+      - key: DEMO_MODE
+        value: 'true'
+      - key: TRUST_PROXY
+        value: '1'
