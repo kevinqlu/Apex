@@ -13,6 +13,8 @@ const sections: { to: string; label: string; icon: IconName }[] = [
   { to: '/help', label: 'Help', icon: 'help' },
 ];
 
+const pageTitles = [...sections, { to: '/map', label: 'Live map' }];
+
 export function AppShell() {
   return (
     <NotificationsProvider>
@@ -26,7 +28,7 @@ function useAnnouncePageChange(main: RefObject<HTMLElement | null>) {
   const firstPage = useRef(true);
 
   useEffect(() => {
-    const section = sections.find((s) => s.to === pathname);
+    const section = pageTitles.find((s) => s.to === pathname);
     document.title = section ? `${section.label} | Apex` : 'Apex driver portal';
     if (firstPage.current) firstPage.current = false;
     else main.current?.focus();

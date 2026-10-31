@@ -1,0 +1,81 @@
+.map-box {
+  height: 320px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--background);
+}
+
+.map-route {
+  margin: 0;
+  font-weight: 600;
+}
+
+.stack-tight {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stack-tight > * {
+  margin: 0;
+}
+
+.message-info {
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.truck-marker {
+  /* Matches the 10 second refresh, so the truck moves smoothly instead of jumping. */
+  transition: transform 10s linear;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--brand-ink);
+  border: 2px solid var(--brand-ink);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.truck-marker span {
+  display: block;
+}
+
+.timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.timeline-step {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 0.15rem 0.75rem;
+  align-items: center;
+}
+
+.timeline-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.timeline-label {
+  font-weight: 600;
+}
+
+.timeline-when {
+  grid-column: 2;
+}
+
+.timeline-upcoming .timeline-state {
+  font-weight: 400;
+}

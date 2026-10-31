@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { getLoads } from '../../api/loads';
 import { getOnboarding } from '../../api/onboarding';
 import { useAuth } from '../../components/AuthProvider';
@@ -30,7 +31,14 @@ export function Home() {
       {loads.status === 'ready' && !active && (
         <p>You have no active load. Your dispatcher will assign your next one.</p>
       )}
-      {active && <LoadCard load={active} />}
+      {active && (
+        <>
+          <LoadCard load={active} />
+          <Link className="button" to="/map">
+            View on map
+          </Link>
+        </>
+      )}
 
       {onboarding.status === 'ready' && <OnboardingCard onboarding={onboarding.data} />}
 

@@ -16,3 +16,22 @@ const day = new Intl.DateTimeFormat(undefined, {
   day: 'numeric',
 });
 export const formatDay = (iso: string) => day.format(new Date(iso));
+
+const COMPASS = [
+  'north',
+  'northeast',
+  'east',
+  'southeast',
+  'south',
+  'southwest',
+  'west',
+  'northwest',
+];
+export const compassWord = (deg: number) => COMPASS[Math.round(deg / 45) % 8]!;
+
+const clock = new Intl.DateTimeFormat(undefined, {
+  hour: 'numeric',
+  minute: '2-digit',
+  second: '2-digit',
+});
+export const formatClock = (ms: number) => clock.format(new Date(ms));
