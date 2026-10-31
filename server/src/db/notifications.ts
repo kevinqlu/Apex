@@ -7,7 +7,6 @@ export interface Notification {
   title: string;
   body: string;
   createdAt: string;
-  // Read state belongs to the signed-in driver only.
   read: boolean;
 }
 
@@ -21,9 +20,7 @@ interface NotificationRow {
   read_at: string | null;
 }
 
-// A notification with no target rows goes to everyone. One with target rows goes only to
-// those drivers. Every read and write below goes through this, so a driver can never see
-// or mark a notification that was not sent to them.
+// Every read and write goes through this, so a driver only touches notifications sent to them.
 const SENT_TO_DRIVER = `(
   NOT EXISTS (SELECT 1 FROM notification_targets t WHERE t.notification_id = n.id)
   OR EXISTS (SELECT 1 FROM notification_targets t WHERE t.notification_id = n.id AND t.driver_id = @driver)
@@ -49,8 +46,7 @@ export function listNotifications(db: Db, driverId: string): Notification[] {
   }));
 }
 
-// IDs that were not sent to this driver, or do not exist, are skipped without an error,
-// so the response cannot reveal whether they exist. Marking twice changes nothing.
+// IDs not sent to this driver are skipped silently, so existence is not revealed.
 export function markRead(db: Db, driverId: string, ids: string[], now = Date.now()): void {
   const insert = db.prepare(
     `INSERT OR IGNORE INTO notification_reads (driver_id, notification_id, read_at)

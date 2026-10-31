@@ -5,9 +5,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    // Listen on the network too, so a phone on the same Wi-Fi can open the dev server.
     host: true,
-    // Same-origin in dev, so the session cookie and the Origin check behave like production.
+    // Same-origin in dev, so the cookie and Origin check match production.
     proxy: { '/api': 'http://localhost:3001' },
   },
 });

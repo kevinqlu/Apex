@@ -27,7 +27,6 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({ status: 'loading' });
 
-  // A refresh keeps you signed in because the session cookie is still valid.
   useEffect(() => {
     authApi.getMe().then(
       ({ driver }) => setState({ status: 'signed-in', driver }),
@@ -48,7 +47,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = useCallback(async () => {
-    // Leave the screen even if the server cannot be reached.
     await authApi.logout().catch(() => undefined);
     setState({ status: 'signed-out' });
   }, []);

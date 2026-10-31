@@ -8,7 +8,6 @@ const LABELS: Record<string, string> = {
   [PROOF_OF_DELIVERY]: 'Proof of delivery',
 };
 
-// A document type the company adds to the onboarding template still gets a readable name.
 export function labelFor(type: string): string {
   const known = LABELS[type];
   if (known) return known;
@@ -16,8 +15,6 @@ export function labelFor(type: string): string {
   return words.charAt(0).toUpperCase() + words.slice(1);
 }
 
-// Required documents come from the onboarding template, so adding an upload task there
-// adds it to the Documents screen too, with no code change.
 export function requiredDocumentTypes(template: OnboardingTemplate): string[] {
   const types = template.tasks.flatMap((t) =>
     t.type === 'upload' && t.docType ? [t.docType] : [],

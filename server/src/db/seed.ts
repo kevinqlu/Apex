@@ -3,7 +3,6 @@ import path from 'node:path';
 import bcrypt from 'bcryptjs';
 import type { Db } from './index.js';
 
-// Demo-only password, shown on the login screen when DEMO_MODE=true.
 export const DEMO_PASSWORD = 'apex-demo-1';
 
 const MINUTE = 60_000;
@@ -25,9 +24,7 @@ interface SeedLoad {
   reference?: string;
 }
 
-// Loads are listed as offsets from now so the demo always looks fresh.
 const loads: SeedLoad[] = [
-  // In transit, about 40% along: picked up 8 hours ago, due in 12.
   {
     id: 'L-48213',
     driverId: 'D-1042',
@@ -67,7 +64,6 @@ const loads: SeedLoad[] = [
     pickup: DAY + 10 * HOUR,
     delivery: 2 * DAY + 4 * HOUR,
   },
-  // Delivered 2 days ago. No proof of delivery is seeded for it on purpose.
   {
     id: 'L-48190',
     driverId: 'D-1042',
@@ -107,7 +103,6 @@ const tablesToClear = [
   'drivers',
 ];
 
-// A one-page PDF that says it is demo data. Small enough to keep in the code.
 function samplePdf(): Buffer {
   const content = 'BT /F1 16 Tf 20 70 Td (Sample document. Demo data only.) Tj ET';
   return Buffer.from(
@@ -127,8 +122,7 @@ function samplePdf(): Buffer {
   );
 }
 
-// Removes earlier seeded and uploaded files, and nothing else. Only names we create match,
-// so a wrong UPLOADS_DIR cannot delete someone's other files.
+// Matches only names we create, so a wrong UPLOADS_DIR cannot delete other files.
 const OURS = /^(seed-[a-z-]+|[0-9a-f]{32})\.(pdf|jpg|png|heic)$/;
 function resetUploads(dir: string): void {
   fs.mkdirSync(dir, { recursive: true });
@@ -231,18 +225,15 @@ export function seed(db: Db, now = Date.now(), uploadsDir?: string): void {
       'Terminals close early the day before the holiday. Check with your dispatcher before you plan a run.',
       at(-3 * DAY),
     );
-    // Only the lane closure is targeted, so it reaches Cody alone.
     db.prepare('INSERT INTO notification_targets (notification_id, driver_id) VALUES (?, ?)').run(
       'N-2',
       'D-1042',
     );
 
-    // Cody has already read the older announcement, so they see both read and unread items.
     db.prepare(
       'INSERT INTO notification_reads (driver_id, notification_id, read_at) VALUES (?, ?, ?)',
     ).run('D-1042', 'N-4', at(-2 * DAY));
 
-    // Two real (tiny) files, so downloading a seeded document works in the demo.
     const insertDocument = db.prepare(
       `INSERT INTO documents (id, driver_id, type, load_id, original_name, stored_name, size, mime, status, uploaded_at)
        VALUES (?, ?, ?, NULL, ?, ?, ?, 'application/pdf', ?, ?)`,
@@ -275,7 +266,6 @@ export function seed(db: Db, now = Date.now(), uploadsDir?: string): void {
       }
     }
 
-    // One older open ticket, so the list is not empty for Cody. Anthony has none, which shows the empty state.
     db.prepare(
       `INSERT INTO tickets (id, driver_id, category, load_id, message, status, created_at)
        VALUES ('T-4F2A91', 'D-1042', 'equipment', NULL, ?, 'open', ?)`,
@@ -284,9 +274,6 @@ export function seed(db: Db, now = Date.now(), uploadsDir?: string): void {
       at(-DAY),
     );
 
-    // Cody has done everything that is due except signing the fleet policy, which is due
-    // today (five days after they were hired). Anthony has only had the record check.
-    // These task IDs match the starter template. A test keeps them in step.
     const insertProgress = db.prepare(
       'INSERT INTO onboarding_progress (driver_id, task_id, completed_at) VALUES (?, ?, ?)',
     );

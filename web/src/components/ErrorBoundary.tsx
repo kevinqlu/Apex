@@ -1,6 +1,5 @@
 import { Component, type ReactNode } from 'react';
 
-// The last safety net. A bug in one screen should not leave the driver on a blank page.
 export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
 

@@ -30,5 +30,4 @@ export function uploadDocument(type: string, file: File, loadId?: string) {
   return upload<DocumentCenter>('/documents', form);
 }
 
-// A plain link, so the browser sends the session cookie and saves the file.
 export const documentFileUrl = (id: string) => `/api/documents/${id}/file`;

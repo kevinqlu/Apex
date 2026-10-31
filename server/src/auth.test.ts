@@ -9,7 +9,6 @@ const db = openDb(':memory:');
 const server = createApp(db).listen(0);
 const base = () => `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
 
-// Sent by browsers on every same-site POST. Tests send it by hand.
 const sameOrigin = { Origin: config.appOrigin, 'Content-Type': 'application/json' };
 
 function post(path: string, body: unknown = {}, headers: Record<string, string> = {}) {
@@ -59,7 +58,6 @@ describe('login', () => {
     const blocked = await login('D-2217', DEMO_PASSWORD);
     expect(blocked.status).toBe(429);
     expect((await blocked.json()).error.message).toMatch(/try again in \d+ minutes?/i);
-    // A different driver ID is counted separately.
     expect((await login('D-1042')).status).toBe(200);
   });
 });
@@ -89,7 +87,6 @@ describe('sessions', () => {
     const cookie = cookieFrom(await login());
     expect((await post('/auth/logout', {}, { Cookie: cookie })).status).toBe(200);
     expect(db.prepare('SELECT COUNT(*) AS n FROM sessions').get()).toEqual({ n: 0 });
-    // The old cookie is useless even if someone kept a copy.
     const res = await fetch(`${base()}/api/auth/me`, { headers: { Cookie: cookie } });
     expect(res.status).toBe(401);
   });

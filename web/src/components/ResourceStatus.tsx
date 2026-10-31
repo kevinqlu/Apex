@@ -1,6 +1,5 @@
 import { Icon } from './Icon';
 
-// Shared by every screen that loads something from the server.
 export function Loading({ what }: { what: string }) {
   return (
     <p className="page-status" role="status">

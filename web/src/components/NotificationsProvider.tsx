@@ -18,7 +18,6 @@ type NotificationsState =
 interface NotificationsContextValue {
   state: NotificationsState;
   unreadCount: number;
-  // Set when marking as read fails, so the screen can say so.
   markError: string | null;
   markRead: (ids: string[]) => Promise<void>;
   reload: () => void;
@@ -29,8 +28,6 @@ const NotificationsContext = createContext<NotificationsContextValue | null>(nul
 const messageFor = (err: unknown) =>
   err instanceof ApiError ? err.message : 'Something went wrong. Try again.';
 
-// One copy of the list, shared by the nav badge, the dashboard, and the Alerts screen,
-// so they always agree about what is unread.
 export function NotificationsProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<NotificationsState>({ status: 'loading' });
   const [markError, setMarkError] = useState<string | null>(null);

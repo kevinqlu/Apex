@@ -20,7 +20,6 @@ interface AppOptions {
   template?: OnboardingTemplate;
   demoMode?: boolean;
   uploadsDir?: string;
-  // Folder with the built web app. Served only when it exists and this is set or in production.
   webDist?: string;
 }
 
@@ -38,7 +37,7 @@ export function createApp(
   if (config.trustProxy > 0) app.set('trust proxy', config.trustProxy);
   app.use((_req, res, next) => {
     res.set({
-      // The browser must not guess a file's type, and no other site may frame the app.
+      // Stop type sniffing and framing by other sites.
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
       'Referrer-Policy': 'same-origin',
@@ -49,12 +48,10 @@ export function createApp(
   app.use('/api', originCheck(config.appOrigins));
 
   app.get('/api/health', (_req, res) => {
-    // A real query proves the database is reachable, not just that Express is up.
     db.prepare('SELECT 1').get();
     res.json({ ok: true });
   });
 
-  // One limiter per app, so tests start with a clean slate.
   app.use('/api/auth', authRouter(db, createLoginLimiter()));
 
   // Every data route sits behind requireSession, which sets the driver for the request.
@@ -69,8 +66,7 @@ export function createApp(
 
   app.use('/api', notFound);
 
-  // In production the server also hands out the web app, so one address does everything and
-  // the session cookie stays same-site. Any address that is not /api is a screen in the app.
+  // Same-origin serving keeps the session cookie same-site.
   const indexHtml = webDist && path.join(webDist, 'index.html');
   if (webDist && indexHtml && fs.existsSync(indexHtml)) {
     app.use(express.static(webDist));

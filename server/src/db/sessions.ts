@@ -8,7 +8,7 @@ export function createSession(
   hours: number,
   now = Date.now(),
 ): { id: string; expiresAt: Date } {
-  // 32 random bytes from the OS, so a session id cannot be guessed.
+  // Unguessable session id.
   const id = randomBytes(32).toString('hex');
   const expiresAt = new Date(now + hours * 3_600_000);
   db.prepare('INSERT INTO sessions (id, driver_id, expires_at) VALUES (?, ?, ?)').run(
@@ -19,7 +19,7 @@ export function createSession(
   return { id, expiresAt };
 }
 
-// The driver comes only from this lookup, never from anything the client sends.
+// The driver comes only from this lookup, never from the client.
 export function findDriverBySession(
   db: Db,
   sessionId: string,

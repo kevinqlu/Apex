@@ -23,7 +23,7 @@ export interface Ticket {
 
 const labelFor = (id: string) => TICKET_CATEGORIES.find((c) => c.id === id)?.label ?? id;
 
-// Only this driver's tickets, newest first. There is no way to ask for anyone else's.
+// Only this driver's tickets.
 export function listTickets(db: Db, driverId: string): Ticket[] {
   const rows = db
     .prepare('SELECT * FROM tickets WHERE driver_id = ? ORDER BY created_at DESC')

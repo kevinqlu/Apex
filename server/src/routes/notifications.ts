@@ -22,7 +22,6 @@ export function notificationsRouter(db: Db): Router {
     }
     const driverId = currentDriver(res).id;
     markRead(db, driverId, ids);
-    // Send the whole list back so the app shows exactly what the server now holds.
     res.json({ notifications: listNotifications(db, driverId) });
   });
 

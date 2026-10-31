@@ -16,8 +16,6 @@ import { openDb } from './db/index.js';
 import { DEMO_PASSWORD, seed } from './db/seed.js';
 
 const db = openDb(':memory:');
-// A pinned copy of the Starter template. The real file is the company's to edit, so tests that
-// count tasks must not depend on it. One test below checks the real file is still valid.
 const pinnedStarter = loadTemplate(
   path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures/starter.template.json'),
 );
@@ -171,7 +169,6 @@ describe('template validation', () => {
   });
 
   it('matches the task IDs the seed data uses', () => {
-    // Checked against the real file, so removing a task there without updating the seed fails here.
     const ids = new Set(loadTemplate().tasks.map((t) => t.id));
     const seeded = db.prepare('SELECT DISTINCT task_id FROM onboarding_progress').all() as {
       task_id: string;
@@ -207,9 +204,7 @@ describe('what each driver sees', () => {
     expect(tasks['safety-video']?.status).toBe('done');
     expect(tasks['cdl-upload']?.status).toBe('done');
     expect(tasks['medical-card']).toMatchObject({ status: 'done', note: 'Under review' });
-    // Due day 5, hired 5 days ago: due within the last moments of "today".
     expect(Math.abs(Date.parse(tasks['fleet-policy']!.dueAt) - Date.now())).toBeLessThan(60_000);
-    // The 30-day check-in is the company's, and not due yet.
     expect(tasks['thirty-day-checkin']?.status).toBe('waiting_on_company');
     expect(view.progress).toEqual({ done: 5, total: 7 });
   });

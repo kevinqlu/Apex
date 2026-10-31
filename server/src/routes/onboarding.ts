@@ -5,7 +5,6 @@ import { buildOnboarding, recordCompletion } from '../db/onboarding.js';
 import { currentDriver } from '../middleware/auth.js';
 import { sendError } from '../middleware/errors.js';
 
-// "Cody  PHENG" and "cody pheng" both count as Cody Pheng.
 const normalizeName = (name: string) => name.trim().replace(/\s+/g, ' ').toLowerCase();
 
 // Mounted behind requireSession. The driver comes from the session, never from the request.
@@ -14,7 +13,6 @@ export function onboardingRouter(db: Db, template: OnboardingTemplate, demoMode:
 
   const respond = (driverId: string) => ({
     ...buildOnboarding(db, template, driverId),
-    // Tells the app whether to show the demo-only "mark complete" buttons.
     demoActions: demoMode,
   });
 
@@ -32,7 +30,7 @@ export function onboardingRouter(db: Db, template: OnboardingTemplate, demoMode:
 
     switch (task.type) {
       case 'company':
-        // The most important rule here: company steps are never the driver's to complete.
+        // Company steps are never the driver's to complete.
         sendError(
           res,
           403,
@@ -69,8 +67,7 @@ export function onboardingRouter(db: Db, template: OnboardingTemplate, demoMode:
     res.json(respond(driver.id));
   });
 
-  // Demo only. Lets a walkthrough show a company step finishing, which in real use
-  // only company staff can do. It does not exist unless DEMO_MODE=true.
+  // Demo only: exists only when DEMO_MODE=true.
   router.post('/tasks/:taskId/demo-complete', (req, res) => {
     const task = template.tasks.find((t) => t.id === req.params.taskId);
     if (!demoMode || !task) {

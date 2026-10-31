@@ -24,8 +24,6 @@ const chips: Record<OnboardingTask['status'], { icon: IconName; className: strin
   waiting_on_company: { icon: 'hourglass', className: 'chip chip-pending' },
 };
 
-// One card for every task. The template decides which tasks exist and what type each is,
-// and this only decides how each type looks, so a new task needs no change here.
 export function TaskCard({ task, demoActions, onChange }: Props) {
   const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +35,6 @@ export function TaskCard({ task, demoActions, onChange }: Props) {
     try {
       onChange(await action());
     } catch (err) {
-      // The typed name stays in the field, so a typo is one fix away.
       setError(err instanceof ApiError ? err.message : 'Something went wrong. Try again.');
     } finally {
       setBusy(false);
@@ -51,7 +48,6 @@ export function TaskCard({ task, demoActions, onChange }: Props) {
       : task.status === 'waiting_on_company'
         ? `Waiting on ${task.ownerLabel}`
         : 'To do';
-  // A step the company owes is never the driver's fault, so it is never shown as overdue.
   const due = task.status === 'todo' ? dueLabel(task.dueAt) : null;
 
   return (

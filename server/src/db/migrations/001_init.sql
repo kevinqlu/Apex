@@ -45,14 +45,12 @@ CREATE TABLE notifications (
   created_at TEXT NOT NULL
 );
 
--- No rows for a notification means it was sent to every driver.
 CREATE TABLE notification_targets (
   notification_id TEXT NOT NULL REFERENCES notifications(id) ON DELETE CASCADE,
   driver_id TEXT NOT NULL REFERENCES drivers(id) ON DELETE CASCADE,
   PRIMARY KEY (notification_id, driver_id)
 );
 
--- Read state is per driver, so one driver reading never changes another's.
 CREATE TABLE notification_reads (
   driver_id TEXT NOT NULL REFERENCES drivers(id) ON DELETE CASCADE,
   notification_id TEXT NOT NULL REFERENCES notifications(id) ON DELETE CASCADE,

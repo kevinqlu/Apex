@@ -1,7 +1,6 @@
 import type { Load } from '../api/loads';
 import { Icon } from './Icon';
 
-// The one memorable element: where the truck is between the two cities.
 export function RouteStrip({ load }: { load: Load }) {
   const percent = Math.round(load.progress * 100);
   const from = `${load.origin.city}, ${load.origin.state}`;

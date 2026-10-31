@@ -5,7 +5,6 @@ import { createTicket, type TicketList } from '../../api/support';
 import { DrivingNotice } from '../../components/DrivingNotice';
 import { Icon } from '../../components/Icon';
 
-// The same limits the server enforces. The server is the one that decides.
 const MIN = 10;
 const MAX = 1000;
 
@@ -29,7 +28,6 @@ export function TicketForm({ categories, loads, onSent }: Props) {
     setSentId(null);
     setFormError(null);
 
-    // Nothing typed is ever cleared on a mistake. The fields keep their values.
     const next: typeof errors = {};
     if (!category) next.category = 'Choose what your message is about.';
     const length = message.trim().length;
@@ -42,7 +40,6 @@ export function TicketForm({ categories, loads, onSent }: Props) {
     try {
       const list = await createTicket({ category, loadId: loadId || undefined, message });
       onSent(list);
-      // The newest ticket is first in the list the server sends back.
       setSentId(list.tickets[0]?.id ?? null);
       setCategory('');
       setLoadId('');

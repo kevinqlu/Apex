@@ -27,8 +27,6 @@ export interface OnboardingTemplate {
   tasks: Task[];
 }
 
-// Thrown for any problem with the template. The message is written for the person who
-// edits the file, so the server prints it as it is and stops.
 export class TemplateError extends Error {}
 
 export const TEMPLATE_PATH = path.join(
@@ -53,8 +51,6 @@ function text(obj: Record<string, unknown>, key: string, where: string, why?: st
   return value as string;
 }
 
-// Each type has the fields that only make sense for it. A stray field is an error, because
-// it usually means the type was changed and the rest of the task was not.
 function typeFields(task: Record<string, unknown>, type: TaskType, where: string) {
   const only: Record<string, TaskType> = {
     docType: 'upload',
@@ -157,8 +153,6 @@ export function validateTemplate(raw: unknown): OnboardingTemplate {
   return { phases, tasks };
 }
 
-// Called once at startup, so a bad edit stops the server with a clear message
-// instead of breaking a driver's screen later.
 export function loadTemplate(file = TEMPLATE_PATH): OnboardingTemplate {
   let contents: string;
   try {

@@ -108,7 +108,6 @@ describe('uploading', () => {
       expect(res.status).toBe(201);
     }
     const stored = storedFiles().filter((name) => !name.startsWith('seed-'));
-    // Each upload replaced the one before it, so one file is left, with a random name.
     expect(stored).toHaveLength(1);
     expect(stored[0]).toMatch(/^[0-9a-f]{32}\.heic$/);
     expect(stored[0]).not.toContain('license');

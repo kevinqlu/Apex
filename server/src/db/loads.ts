@@ -38,13 +38,9 @@ export interface Load {
   deliveryAt: string;
   delayNote: string | null;
   reference: string | null;
-  // How far along the route the truck is, from 0 to 1, for the route strip.
   progress: number;
 }
 
-// Only a load in transit has moved. A late pickup is still at the origin, and a delivered
-// load is at the destination. In transit, the position follows the clock between pickup
-// and delivery, kept off the ends so the truck marker never sits on a city name.
 export function progressFor(row: LoadRow, now: number): number {
   if (row.status === 'delivered') return 1;
   if (row.status !== 'in_transit') return 0;
@@ -78,8 +74,7 @@ export function listLoads(db: Db, driverId: string, now = Date.now()): Load[] {
   return rows.map((row) => toLoad(row, now));
 }
 
-// Ownership is part of the query. A load that belongs to someone else is simply not found,
-// so the response cannot confirm that the ID exists.
+// Ownership is in the query: another driver's load is not found.
 export function findLoad(
   db: Db,
   driverId: string,

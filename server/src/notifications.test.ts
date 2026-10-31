@@ -40,7 +40,6 @@ const markRead = (cookie: string, ids: unknown) =>
 
 const unreadIds = (items: Item[]) => items.filter((n) => !n.read).map((n) => n.id);
 
-// Seeding clears sessions, so each test signs both drivers in again.
 beforeEach(async () => {
   seed(db);
   cody = await signIn('D-1042');
@@ -58,7 +57,6 @@ describe('who gets which notification', () => {
   it('sends a targeted alert only to the driver it names', async () => {
     const marcusIds = (await list(cody)).map((n) => n.id);
     const danaIds = (await list(anthony)).map((n) => n.id);
-    // N-2 is the lane closure targeted at Cody. N-1, N-3, and N-4 go to everyone.
     expect([...marcusIds].sort()).toEqual(['N-1', 'N-2', 'N-3', 'N-4']);
     expect(danaIds).not.toContain('N-2');
     expect(danaIds.sort()).toEqual(['N-1', 'N-3', 'N-4']);
@@ -99,7 +97,6 @@ describe('read state is per driver', () => {
     expect(
       db.prepare("SELECT COUNT(*) AS n FROM notification_reads WHERE driver_id = 'D-2217'").get(),
     ).toEqual({ n: 0 });
-    // Cody still has it unread.
     expect(unreadIds(await list(cody))).toContain('N-2');
   });
 

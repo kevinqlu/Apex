@@ -3,7 +3,6 @@
   color: var(--info);
 }
 
-/* Unread count on the Alerts tab. The number is text, so it never relies on color. */
 .nav-link {
   position: relative;
 }
@@ -31,7 +30,6 @@
   }
 }
 
-/* Urgent banner on the dashboard */
 .banner {
   display: flex;
   flex-direction: column;
@@ -86,7 +84,6 @@
   letter-spacing: 0.04em;
 }
 
-/* Recent unread on the dashboard */
 .recent {
   gap: 0.25rem;
   color: var(--ink);
@@ -97,7 +94,6 @@
   align-self: flex-start;
 }
 
-/* Alerts screen */
 .filters {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -122,7 +118,6 @@
   font-size: 0.9rem;
 }
 
-/* Unread is marked by the New label, a heavier title, and a bar, not color alone. */
 .alert-unread {
   border-left: 6px solid var(--brand);
 }

@@ -1,11 +1,8 @@
-// The same limits the server enforces. Checking here too just saves a slow trip for a file
-// that was never going to be accepted. The server is the one that decides.
 const MAX_BYTES = 10 * 1024 * 1024;
 const EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'heic'];
 
 export const ACCEPT = EXTENSIONS.map((e) => `.${e}`).join(',');
 
-// Returns a plain-language problem, or null when the file looks fine.
 export function checkFile(file: File): string | null {
   const extension = file.name.split('.').pop()?.toLowerCase() ?? '';
   if (!EXTENSIONS.includes(extension)) {

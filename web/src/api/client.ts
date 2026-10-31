@@ -1,4 +1,3 @@
-// Error messages from the server are written for drivers, so they are shown as they are.
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -11,12 +10,10 @@ export class ApiError extends Error {
 
 let onUnauthorized: (() => void) | undefined;
 
-// The auth provider registers here so any expired session sends the driver to login.
 export function setUnauthorizedHandler(handler: (() => void) | undefined): void {
   onUnauthorized = handler;
 }
 
-// A 401 from these is an answer, not an expired session.
 const AUTH_QUESTIONS = new Set(['/auth/login', '/auth/me']);
 
 async function call<T>(path: string, init: RequestInit): Promise<T> {
@@ -49,13 +46,13 @@ export function request<T>(
   if (method === 'GET') return call<T>(path, { method });
   return call<T>(path, {
     method,
-    // The server requires JSON on every change, as a CSRF check.
+    // JSON on every change doubles as a CSRF check.
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body ?? {}),
   });
 }
 
-// For files. The browser sets the multipart type and boundary itself, so no header here.
+// The browser sets the multipart boundary itself.
 export function upload<T>(path: string, form: FormData): Promise<T> {
   return call<T>(path, { method: 'POST', body: form });
 }

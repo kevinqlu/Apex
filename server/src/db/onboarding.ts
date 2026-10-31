@@ -1,7 +1,6 @@
 import type { OnboardingTemplate, Task } from '../config/onboarding.js';
 import type { Db } from './index.js';
 
-// done: finished. todo: the driver has to do it. waiting: the company has to do it.
 export type TaskStatus = 'done' | 'todo' | 'waiting_on_company';
 
 export interface TaskView {
@@ -16,7 +15,6 @@ export interface TaskView {
   dueAt: string;
   status: TaskStatus;
   completedAt?: string;
-  // Extra words for the driver, such as "Under review" for an uploaded document.
   note?: string;
 }
 
@@ -38,8 +36,6 @@ interface DocumentRow {
   uploaded_at: string;
 }
 
-// Everything here comes from the template and this driver's own rows. Phases and tasks
-// keep the order of the file, so reordering the template reorders the screen.
 export function buildOnboarding(
   db: Db,
   template: OnboardingTemplate,
@@ -56,7 +52,6 @@ export function buildOnboarding(
         .all(driverId) as ProgressRow[]
     ).map((row) => [row.task_id, row.completed_at]),
   );
-  // Newest upload per document type wins.
   const documents = new Map(
     (
       db
@@ -79,7 +74,6 @@ export function buildOnboarding(
       minutes: task.minutes,
       dueAt: new Date(hiredAt + task.dueDay * DAY).toISOString(),
     };
-    // An upload task is done when the document exists. It is never marked done by hand.
     const document =
       task.type === 'upload' && task.docType ? documents.get(task.docType) : undefined;
     const completedAt = document?.uploaded_at ?? progress.get(task.id);
@@ -103,7 +97,6 @@ export function buildOnboarding(
   };
 }
 
-// Safe to repeat: the first completion time is kept.
 export function recordCompletion(
   db: Db,
   driverId: string,

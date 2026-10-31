@@ -1,6 +1,5 @@
 import { Icon } from './Icon';
 
-// A real tel: link, so a tap on a phone starts the call. The number is shown as text too.
 export function CallButton({
   phone,
   children,

@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router';
 import { useAuth } from './AuthProvider';
 
-// This only decides what to show. The server checks the session on every request.
+// UI only; the server checks the session on every request.
 export function ProtectedRoute() {
   const { state } = useAuth();
   if (state.status === 'loading')

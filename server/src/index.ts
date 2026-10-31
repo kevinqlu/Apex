@@ -3,7 +3,6 @@ import { config } from './config/env.js';
 import { loadTemplate, TemplateError } from './config/onboarding.js';
 import { openDb } from './db/index.js';
 
-// A bad onboarding template stops the server here, with the problem spelled out.
 let template;
 try {
   template = loadTemplate();

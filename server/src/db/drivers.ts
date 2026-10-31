@@ -2,7 +2,7 @@ import type { Db } from './index.js';
 
 export type DutyStatus = 'driving' | 'on_duty' | 'sleeper' | 'off_duty';
 
-// What the API may return about a driver. The password hash is not part of this type.
+// Never includes the password hash.
 export interface DriverProfile {
   id: string;
   name: string;

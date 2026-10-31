@@ -14,7 +14,6 @@ export function Login() {
   const [busy, setBusy] = useState(false);
   const [demo, setDemo] = useState<DemoInfo | null>(null);
 
-  // The server only answers when DEMO_MODE=true, so a real deployment shows nothing here.
   useEffect(() => {
     document.title = 'Sign in | Apex';
     getDemoInfo().then(setDemo, () => setDemo(null));

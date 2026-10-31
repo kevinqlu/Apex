@@ -1,6 +1,5 @@
 import type { ErrorRequestHandler, RequestHandler, Response } from 'express';
 
-// The standard error shape from SPEC section 5. The web app shows `message` as written.
 export function sendError(res: Response, status: number, code: string, message: string): void {
   res.status(status).json({ error: { code, message } });
 }
@@ -14,7 +13,6 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
     next(err);
     return;
   }
-  // Body parser failures carry a 4xx status. Everything else is ours to fix.
   const status = typeof err?.status === 'number' && err.status < 500 ? err.status : 500;
   if (status === 500) console.error(err);
   sendError(

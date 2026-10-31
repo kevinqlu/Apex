@@ -24,7 +24,6 @@ const paths = {
 
 export type IconName = keyof typeof paths;
 
-// Decorative: the text next to it carries the meaning.
 export function Icon({ name }: { name: IconName }) {
   return (
     <svg className="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">

@@ -6,7 +6,6 @@ import { sendError } from '../middleware/errors.js';
 
 const DUTY_STATUSES: DutyStatus[] = ['driving', 'on_duty', 'sleeper', 'off_duty'];
 
-// Mounted behind requireSession.
 export function meRouter(db: Db): Router {
   const router = Router();
 

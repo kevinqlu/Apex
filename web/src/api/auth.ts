@@ -21,5 +21,4 @@ export const logout = () => request<{ ok: boolean }>('POST', '/auth/logout');
 
 export const getMe = () => request<{ driver: Driver }>('GET', '/auth/me');
 
-// Only answers when the server runs with DEMO_MODE=true.
 export const getDemoInfo = () => request<DemoInfo>('GET', '/auth/demo');

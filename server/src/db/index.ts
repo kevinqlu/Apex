@@ -11,15 +11,13 @@ export function openDb(file: string): Db {
   if (file !== ':memory:') fs.mkdirSync(path.dirname(path.resolve(file)), { recursive: true });
   const db = new Database(file);
   db.pragma('journal_mode = WAL');
-  // Wait briefly instead of failing when the seed script and the server touch the file together.
   db.pragma('busy_timeout = 3000');
-  // SQLite ignores foreign keys unless this is on for each connection.
+  // SQLite ignores foreign keys unless enabled per connection.
   db.pragma('foreign_keys = ON');
   migrate(db);
   return db;
 }
 
-// Applies each numbered .sql file once, in order, and records it.
 function migrate(db: Db): void {
   db.exec('CREATE TABLE IF NOT EXISTS schema_migrations (name TEXT PRIMARY KEY)');
   const applied = new Set(

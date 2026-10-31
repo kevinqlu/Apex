@@ -11,7 +11,6 @@ export function Loads() {
   const { state, reload } = useResource(getLoads);
   const [tab, setTab] = useState<Tab>('current');
 
-  // The server returns loads in pickup order. Delivered shows the newest first.
   const shown =
     state.status === 'ready'
       ? state.data.loads.filter((l) => isDelivered(l) === (tab === 'delivered'))

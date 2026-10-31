@@ -16,7 +16,6 @@ interface Props {
   detail?: string;
   status: DocumentStatus;
   file?: DocumentFile;
-  // Sends the file. Resolves when the screen has the new list.
   onUpload: (file: File) => Promise<void>;
 }
 
@@ -28,7 +27,7 @@ export function DocumentCard({ title, detail, status, file, onUpload }: Props) {
 
   async function choose(event: ChangeEvent<HTMLInputElement>) {
     const chosen = event.target.files?.[0];
-    // So choosing the same file again still counts as a change.
+    // Lets choosing the same file again fire change.
     event.target.value = '';
     if (!chosen) return;
 
@@ -69,8 +68,6 @@ export function DocumentCard({ title, detail, status, file, onUpload }: Props) {
       )}
 
       <div className="doc-actions">
-        {/* The real file input stays in the page for keyboard and screen reader users.
-            The label is the big button a driver taps. */}
         <input
           id={inputId}
           className="file-input"

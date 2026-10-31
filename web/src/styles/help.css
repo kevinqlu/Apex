@@ -1,4 +1,3 @@
-/* The roadside card is the loudest thing on the screen on purpose. */
 .roadside {
   display: flex;
   flex-direction: column;
@@ -33,7 +32,6 @@
   font-weight: 600;
 }
 
-/* Form fields on the Help screen */
 .task-form select,
 .task-form textarea {
   min-height: var(--tap);

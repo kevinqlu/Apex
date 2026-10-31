@@ -57,7 +57,6 @@ export function buildDocumentCenter(
   const rows = db
     .prepare('SELECT * FROM documents WHERE driver_id = ? ORDER BY uploaded_at')
     .all(driverId) as DocumentRow[];
-  // Later uploads come last, so they win if a type somehow has two rows.
   const byKey = new Map(rows.map((r) => [`${r.type}|${r.load_id ?? ''}`, r]));
 
   const required = requiredDocumentTypes(template).map((type) => {
@@ -100,7 +99,7 @@ export function buildDocumentCenter(
   return { required, proofOfDelivery };
 }
 
-// Ownership is part of the query, so another driver's document is simply not found.
+// Ownership is in the query: another driver's document is not found.
 export function findOwnedDocument(db: Db, driverId: string, id: string): DocumentRow | undefined {
   return db.prepare('SELECT * FROM documents WHERE id = ? AND driver_id = ?').get(id, driverId) as
     DocumentRow | undefined;
@@ -115,8 +114,6 @@ interface NewDocument {
   mime: string;
 }
 
-// A new file for a type that already has one replaces it and goes back to review.
-// Returns the stored names of replaced files so the caller can delete them from disk.
 export function saveDocument(
   db: Db,
   driverId: string,

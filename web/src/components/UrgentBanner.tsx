@@ -1,7 +1,6 @@
 import { Icon } from './Icon';
 import { useNotifications } from './NotificationsProvider';
 
-// Solid and impossible to miss. Each banner stays until the driver marks it as read.
 export function UrgentBanners() {
   const { state, markRead } = useNotifications();
   if (state.status !== 'ready') return null;

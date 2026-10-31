@@ -11,8 +11,7 @@ export const MIME_FOR: Record<FileKind, string> = {
   heic: 'image/heic',
 };
 
-// The file's own first bytes decide what it is. The name and the type the browser claims
-// are not trusted, because a renamed program would keep both.
+// Decide by the file's first bytes; the name and claimed type are not trusted.
 export function sniffKind(bytes: Buffer): FileKind | null {
   if (bytes.subarray(0, 5).toString('latin1') === '%PDF-') return 'pdf';
   if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff)

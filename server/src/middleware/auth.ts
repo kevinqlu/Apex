@@ -14,7 +14,7 @@ export function readSessionId(req: Request): string | undefined {
   return undefined;
 }
 
-// Every data route sits behind this. It is the only place a driver identity is set.
+// The only place a driver identity is set.
 export function requireSession(db: Db): RequestHandler {
   return (req, res, next) => {
     const sessionId = readSessionId(req);
@@ -28,7 +28,6 @@ export function requireSession(db: Db): RequestHandler {
   };
 }
 
-// Route handlers call this, so they never read a driver ID from the request.
 export function currentDriver(res: Response): DriverProfile {
   return res.locals.driver as DriverProfile;
 }

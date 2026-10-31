@@ -14,8 +14,7 @@ import {
 import { sendError } from '../middleware/errors.js';
 import type { LoginLimiter } from '../middleware/loginLimiter.js';
 
-// Compared against when the driver ID does not exist, so a wrong ID and a wrong password
-// take the same time and cannot be told apart.
+// Compared when the driver ID is unknown, so timing does not reveal which part was wrong.
 const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 10);
 
 const WRONG_LOGIN = 'Driver ID or password is incorrect.';
@@ -72,7 +71,6 @@ export function authRouter(db: Db, limiter: LoginLimiter): Router {
     res.json({ driver: toProfile(driver) });
   });
 
-  // Works without a valid session on purpose, so signing out never fails.
   router.post('/logout', (req, res) => {
     const sessionId = readSessionId(req);
     if (sessionId) deleteSession(db, sessionId);
@@ -84,7 +82,6 @@ export function authRouter(db: Db, limiter: LoginLimiter): Router {
     res.json({ driver: currentDriver(res) });
   });
 
-  // Demo credentials for the login screen. Off unless DEMO_MODE=true.
   router.get('/demo', (_req, res) => {
     if (!config.demoMode) {
       sendError(res, 404, 'not_found', 'We could not find that.');

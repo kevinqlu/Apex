@@ -3,8 +3,7 @@ import { sendError } from './errors.js';
 
 const MUTATING = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
-// CSRF defense for cookie sessions. A page on another site can make the browser send our
-// cookie, but it cannot set a matching Origin header or send JSON without a preflight.
+// CSRF defense: another site cannot set a matching Origin or send JSON without a preflight.
 export function originCheck(appOrigins: string[]): RequestHandler {
   return (req, res, next) => {
     if (!MUTATING.has(req.method)) {
@@ -20,7 +19,7 @@ export function originCheck(appOrigins: string[]): RequestHandler {
       );
       return;
     }
-    // Uploads are the one exception to JSON, and they still must come from our own origin.
+    // Uploads are not JSON but must still come from our origin.
     const isUpload = req.method === 'POST' && req.path === '/documents';
     const contentType = req.headers['content-type'] ?? '';
     const allowed = isUpload

@@ -11,7 +11,6 @@ import { createTicket, listTickets } from '../db/tickets.js';
 import { currentDriver } from '../middleware/auth.js';
 import { sendError } from '../middleware/errors.js';
 
-// Contacts for the Help screen. Mounted behind requireSession.
 export function supportRouter(): Router {
   const router = Router();
 

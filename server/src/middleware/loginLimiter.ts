@@ -1,5 +1,4 @@
-// Failed sign-ins per driver ID and IP, kept in memory. A restart clears it, which is fine for
-// a demo. Entries are pruned whenever that key fails again.
+// Failed sign-ins per driver ID and IP, in memory; a restart clears it.
 export function createLoginLimiter(maxFailures = 5, windowMs = 15 * 60_000) {
   const failures = new Map<string, number[]>();
 
@@ -7,7 +6,6 @@ export function createLoginLimiter(maxFailures = 5, windowMs = 15 * 60_000) {
     (failures.get(key) ?? []).filter((t) => now - t < windowMs);
 
   return {
-    // Returns minutes until the next attempt is allowed, or 0 when sign-in may proceed.
     minutesUntilAllowed(key: string, now = Date.now()): number {
       const times = recent(key, now);
       const oldest = times[0];

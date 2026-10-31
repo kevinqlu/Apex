@@ -1,5 +1,3 @@
-// Company-wide contacts. The numbers use the fictional 555-01xx range reserved for examples.
-// A driver's own dispatcher comes from their record, not from here.
 export const SUPPORT = {
   roadside: {
     label: 'Emergency roadside assistance',
@@ -12,7 +10,6 @@ export const SUPPORT = {
   },
 };
 
-// What a ticket is about. The app builds its form from this list, so the two cannot drift.
 export const TICKET_CATEGORIES = [
   { id: 'load', label: 'A problem with a load' },
   { id: 'pay', label: 'Pay or settlement' },

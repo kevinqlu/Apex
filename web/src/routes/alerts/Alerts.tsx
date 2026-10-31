@@ -34,13 +34,10 @@ export function Alerts() {
       else next.delete(n.id);
       return next;
     });
-    // Opening an unread alert is reading it.
     if (opening && !n.read) void markRead([n.id]);
   }
 
   const active = filters.find((f) => f.value === filter) ?? filters[0]!;
-  // Opening an unread alert marks it read. In the Unread filter it stays on screen while
-  // it is open, so it does not vanish from under the driver who is reading it.
   const shown =
     state.status === 'ready'
       ? state.notifications.filter(

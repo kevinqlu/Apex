@@ -58,7 +58,6 @@ describe('loads are scoped to the signed-in driver', () => {
   });
 
   it('returns 404, not 403, when a driver asks for another driver’s load', async () => {
-    // L-48213 is Cody's. Anthony asking for it must look the same as asking for a load that does not exist.
     const theirs = await get('/loads/L-48213', anthony);
     const missing = await get('/loads/L-00000', anthony);
     expect(theirs.status).toBe(404);

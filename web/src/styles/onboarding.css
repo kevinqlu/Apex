@@ -13,7 +13,6 @@
   font-weight: 600;
 }
 
-/* The bar is backed by the words "5 of 7 steps done", so it never relies on color alone. */
 .progress {
   height: 12px;
   border-radius: 6px;
@@ -83,20 +82,17 @@
   font: inherit;
 }
 
-/* Dashed, so the demo-only control cannot be mistaken for a real driver action. */
 .demo-button {
   align-self: flex-start;
   border-style: dashed;
 }
 
-/* Documents */
 .doc-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-/* Visually hidden, but still focusable. Its label is the tappable button. */
 .file-input {
   position: absolute;
   width: 1px;

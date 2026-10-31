@@ -23,7 +23,7 @@ const BAD_TYPE = 'That file type is not allowed. Upload a PDF, JPG, PNG, or HEIC
 // Mounted behind requireSession. The driver comes from the session, never from the request.
 export function documentsRouter(db: Db, template: OnboardingTemplate, uploadsDir: string): Router {
   const router = Router();
-  // Held in memory until it passes every check, so a rejected file never touches the disk.
+  // In memory until every check passes, so a rejected file never touches disk.
   const receive = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: MAX_UPLOAD_BYTES, files: 1, fields: 5 },
@@ -84,7 +84,7 @@ export function documentsRouter(db: Db, template: OnboardingTemplate, uploadsDir
       forLoad = load.id;
     }
 
-    // Both the name and the file's real contents must say it is an allowed type.
+    // Both the name and the file's real contents must be an allowed type.
     const kind = sniffKind(file.buffer);
     const extension = extensionOf(file.originalname);
     if (!kind || !(ALLOWED_EXTENSIONS as readonly string[]).includes(extension)) {
@@ -92,7 +92,6 @@ export function documentsRouter(db: Db, template: OnboardingTemplate, uploadsDir
       return;
     }
 
-    // A random name, so the stored path says nothing about the driver or the file.
     const storedName = `${randomBytes(16).toString('hex')}.${kind}`;
     fs.mkdirSync(uploadsDir, { recursive: true });
     fs.writeFileSync(path.join(uploadsDir, storedName), file.buffer);
@@ -118,7 +117,7 @@ export function documentsRouter(db: Db, template: OnboardingTemplate, uploadsDir
     res.status(201).json(buildDocumentCenter(db, template, driver.id));
   });
 
-  // The only way to a file. Ownership is checked here, and uploads/ is never served directly.
+  // Only way to a file; ownership is checked and uploads/ is never served directly.
   router.get('/:id/file', (req, res) => {
     const doc = findOwnedDocument(db, currentDriver(res).id, req.params.id);
     if (!doc) {

@@ -22,7 +22,6 @@ export function Help() {
       )}
       {support.state.status === 'ready' && (
         <>
-          {/* First and biggest, because this is the one a driver may need in a hurry. */}
           <section className="roadside" aria-labelledby="roadside-title">
             <h2 id="roadside-title">{support.state.data.roadside.label}</h2>
             <p>{support.state.data.roadside.hours}.</p>

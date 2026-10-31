@@ -5,7 +5,6 @@ import { useNotifications } from './NotificationsProvider';
 
 const SHOWN = 3;
 
-// Unread announcements only. Unread urgent alerts already have their own banner above.
 export function RecentAlerts() {
   const { state, unreadCount } = useNotifications();
   if (state.status !== 'ready') return null;

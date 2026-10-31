@@ -8,7 +8,6 @@ const chips: Record<LoadStatus, { label: string; icon: IconName }> = {
   delivered: { label: 'Delivered', icon: 'checkCircle' },
 };
 
-// Every status has an icon and a word, so it never depends on color alone.
 export function StatusChip({ status }: { status: LoadStatus }) {
   const { label, icon } = chips[status];
   return (

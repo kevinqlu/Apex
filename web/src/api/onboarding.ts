@@ -20,7 +20,6 @@ export interface OnboardingTask {
 export interface Onboarding {
   phases: { id: string; title: string; tasks: OnboardingTask[] }[];
   progress: { done: number; total: number };
-  // True only in demo mode, when the demo "mark complete" buttons are allowed.
   demoActions: boolean;
 }
 

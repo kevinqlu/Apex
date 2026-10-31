@@ -4,9 +4,6 @@ import { ApiError } from '../api/client';
 export type Resource<T> =
   { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; data: T };
 
-// Loads something from the API once, and can load it again. `fetcher` must be a stable
-// function, such as one exported from api/. `replace` is for actions whose answer is the
-// whole updated thing, so the screen shows exactly what the server now holds.
 export function useResource<T>(fetchOnce: () => Promise<T>) {
   const [state, setState] = useState<Resource<T>>({ status: 'loading' });
   const fetcher = useRef(fetchOnce);

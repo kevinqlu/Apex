@@ -13,6 +13,5 @@ export interface Notification {
 export const getNotifications = () =>
   request<{ notifications: Notification[] }>('GET', '/notifications');
 
-// The server answers with the full list, so the app never guesses what changed.
 export const markNotificationsRead = (ids: string[]) =>
   request<{ notifications: Notification[] }>('POST', '/notifications/read', { ids });
