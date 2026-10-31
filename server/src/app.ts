@@ -15,12 +15,16 @@ import { meRouter } from './routes/me.js';
 import { notificationsRouter } from './routes/notifications.js';
 import { onboardingRouter } from './routes/onboarding.js';
 import { supportRouter, ticketsRouter } from './routes/support.js';
+import { trackingRouter } from './routes/tracking.js';
+import { createTrackingProvider } from './tracking/index.js';
+import type { TrackingProvider } from './tracking/provider.js';
 
 interface AppOptions {
   template?: OnboardingTemplate;
   demoMode?: boolean;
   uploadsDir?: string;
   webDist?: string;
+  trackingProvider?: TrackingProvider;
 }
 
 export function createApp(
@@ -30,6 +34,7 @@ export function createApp(
     demoMode = config.demoMode,
     uploadsDir = config.uploadsDir,
     webDist = config.isProduction ? config.webDist : undefined,
+    trackingProvider = createTrackingProvider(),
   }: AppOptions = {},
 ) {
   const app = express();
@@ -62,6 +67,7 @@ export function createApp(
   app.use('/api/documents', session, documentsRouter(db, template, uploadsDir));
   app.use('/api/support', session, supportRouter());
   app.use('/api/tickets', session, ticketsRouter(db));
+  app.use('/api/tracking', session, trackingRouter(db, trackingProvider));
   app.use('/api/onboarding', session, onboardingRouter(db, template, demoMode));
 
   app.use('/api', notFound);

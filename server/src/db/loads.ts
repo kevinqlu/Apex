@@ -67,6 +67,15 @@ function toLoad(row: LoadRow, now: number): Load {
   };
 }
 
+// The load a driver is working on now: on the road first, then delayed, then next up.
+export function pickActiveLoad(loads: Load[]): Load | undefined {
+  for (const status of ['in_transit', 'delayed', 'pending'] as const) {
+    const match = loads.find((l) => l.status === status);
+    if (match) return match;
+  }
+  return undefined;
+}
+
 export function listLoads(db: Db, driverId: string, now = Date.now()): Load[] {
   const rows = db
     .prepare('SELECT * FROM loads WHERE driver_id = ? ORDER BY pickup_at')
