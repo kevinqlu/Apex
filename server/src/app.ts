@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import express from 'express';
 import { config } from './config/env.js';
 import { loadTemplate, type OnboardingTemplate } from './config/onboarding.js';
@@ -18,6 +20,8 @@ interface AppOptions {
   template?: OnboardingTemplate;
   demoMode?: boolean;
   uploadsDir?: string;
+  // Folder with the built web app. Served only when it exists and this is set or in production.
+  webDist?: string;
 }
 
 export function createApp(
@@ -26,10 +30,21 @@ export function createApp(
     template = loadTemplate(),
     demoMode = config.demoMode,
     uploadsDir = config.uploadsDir,
+    webDist = config.isProduction ? config.webDist : undefined,
   }: AppOptions = {},
 ) {
   const app = express();
   app.disable('x-powered-by');
+  if (config.trustProxy > 0) app.set('trust proxy', config.trustProxy);
+  app.use((_req, res, next) => {
+    res.set({
+      // The browser must not guess a file's type, and no other site may frame the app.
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'Referrer-Policy': 'same-origin',
+    });
+    next();
+  });
   app.use(express.json());
   app.use('/api', originCheck(config.appOrigin));
 
@@ -53,6 +68,21 @@ export function createApp(
   app.use('/api/onboarding', session, onboardingRouter(db, template, demoMode));
 
   app.use('/api', notFound);
+
+  // In production the server also hands out the web app, so one address does everything and
+  // the session cookie stays same-site. Any address that is not /api is a screen in the app.
+  const indexHtml = webDist && path.join(webDist, 'index.html');
+  if (webDist && indexHtml && fs.existsSync(indexHtml)) {
+    app.use(express.static(webDist));
+    app.use((req, res, next) => {
+      if (req.method !== 'GET') {
+        next();
+        return;
+      }
+      res.sendFile(indexHtml);
+    });
+  }
+
   app.use(errorHandler);
   return app;
 }

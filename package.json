@@ -12,6 +12,8 @@
   ],
   "scripts": {
     "dev": "concurrently -n server,web -c green,blue \"npm run dev -w server\" \"npm run dev -w web\"",
+    "build": "npm run build -w web",
+    "start": "cross-env NODE_ENV=production npm run start -w server",
     "seed": "npm run seed -w server",
     "lint": "eslint . && npm run typecheck",
     "typecheck": "npm run typecheck -w server && npm run typecheck -w web",
@@ -21,6 +23,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.0",
     "concurrently": "^10.0.6",
+    "cross-env": "^10.1.0",
     "eslint": "^10.14.0",
     "globals": "^17.0.0",
     "prettier": "^3.9.10",
