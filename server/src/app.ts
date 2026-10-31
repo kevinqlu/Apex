@@ -46,7 +46,7 @@ export function createApp(
     next();
   });
   app.use(express.json());
-  app.use('/api', originCheck(config.appOrigin));
+  app.use('/api', originCheck(config.appOrigins));
 
   app.get('/api/health', (_req, res) => {
     // A real query proves the database is reachable, not just that Express is up.

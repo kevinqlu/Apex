@@ -5,13 +5,13 @@ const MUTATING = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
 // CSRF defense for cookie sessions. A page on another site can make the browser send our
 // cookie, but it cannot set a matching Origin header or send JSON without a preflight.
-export function originCheck(appOrigin: string): RequestHandler {
+export function originCheck(appOrigins: string[]): RequestHandler {
   return (req, res, next) => {
     if (!MUTATING.has(req.method)) {
       next();
       return;
     }
-    if (req.headers.origin !== appOrigin) {
+    if (!req.headers.origin || !appOrigins.includes(req.headers.origin)) {
       sendError(
         res,
         403,
