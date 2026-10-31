@@ -12,6 +12,7 @@ import { documentsRouter } from './routes/documents.js';
 import { meRouter } from './routes/me.js';
 import { notificationsRouter } from './routes/notifications.js';
 import { onboardingRouter } from './routes/onboarding.js';
+import { supportRouter, ticketsRouter } from './routes/support.js';
 
 interface AppOptions {
   template?: OnboardingTemplate;
@@ -47,6 +48,8 @@ export function createApp(
   app.use('/api/loads', session, loadsRouter(db));
   app.use('/api/notifications', session, notificationsRouter(db));
   app.use('/api/documents', session, documentsRouter(db, template, uploadsDir));
+  app.use('/api/support', session, supportRouter());
+  app.use('/api/tickets', session, ticketsRouter(db));
   app.use('/api/onboarding', session, onboardingRouter(db, template, demoMode));
 
   app.use('/api', notFound);

@@ -275,6 +275,15 @@ export function seed(db: Db, now = Date.now(), uploadsDir?: string): void {
       }
     }
 
+    // One older open ticket, so the list is not empty for Marcus. Dana has none, which shows the empty state.
+    db.prepare(
+      `INSERT INTO tickets (id, driver_id, category, load_id, message, status, created_at)
+       VALUES ('T-4F2A91', 'D-1042', 'equipment', NULL, ?, 'open', ?)`,
+    ).run(
+      'The latch on my trailer door sticks when it is cold. Please have it checked when I next stop at the terminal.',
+      at(-DAY),
+    );
+
     // Marcus has done everything that is due except signing the fleet policy, which is due
     // today (five days after he was hired). Dana has only had her record check.
     // These task IDs match the starter template. A test keeps them in step.
