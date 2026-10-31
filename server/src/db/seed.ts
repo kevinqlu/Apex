@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import bcrypt from 'bcryptjs';
 import type { Db } from './index.js';
 
@@ -105,7 +107,37 @@ const tablesToClear = [
   'drivers',
 ];
 
-export function seed(db: Db, now = Date.now()): void {
+// A one-page PDF that says it is demo data. Small enough to keep in the code.
+function samplePdf(): Buffer {
+  const content = 'BT /F1 16 Tf 20 70 Td (Sample document. Demo data only.) Tj ET';
+  return Buffer.from(
+    [
+      '%PDF-1.4',
+      '1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj',
+      '2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj',
+      '3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 300 144]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj',
+      `4 0 obj<</Length ${content.length}>>stream`,
+      content,
+      'endstream endobj',
+      '5 0 obj<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>endobj',
+      'trailer<</Root 1 0 R>>',
+      '%%EOF',
+      '',
+    ].join('\n'),
+  );
+}
+
+// Removes earlier seeded and uploaded files, and nothing else. Only names we create match,
+// so a wrong UPLOADS_DIR cannot delete someone's other files.
+const OURS = /^(seed-[a-z-]+|[0-9a-f]{32})\.(pdf|jpg|png|heic)$/;
+function resetUploads(dir: string): void {
+  fs.mkdirSync(dir, { recursive: true });
+  for (const name of fs.readdirSync(dir)) {
+    if (OURS.test(name)) fs.rmSync(path.join(dir, name), { force: true });
+  }
+}
+
+export function seed(db: Db, now = Date.now(), uploadsDir?: string): void {
   const at = (offsetMs: number) => new Date(now + offsetMs).toISOString();
   const hash = bcrypt.hashSync(DEMO_PASSWORD, 10);
 
@@ -210,20 +242,19 @@ export function seed(db: Db, now = Date.now()): void {
       'INSERT INTO notification_reads (driver_id, notification_id, read_at) VALUES (?, ?, ?)',
     ).run('D-1042', 'N-4', at(-2 * DAY));
 
-    // The files behind these rows arrive with uploads in Slice 5. Onboarding only needs to
-    // know that each document exists and what state it is in.
+    // Two real (tiny) files, so downloading a seeded document works in the demo.
     const insertDocument = db.prepare(
       `INSERT INTO documents (id, driver_id, type, load_id, original_name, stored_name, size, mime, status, uploaded_at)
-       VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, NULL, ?, ?, ?, 'application/pdf', ?, ?)`,
     );
+    const sample = samplePdf();
     insertDocument.run(
       'DOC-1',
       'D-1042',
       'medical_card',
       'medical-card.pdf',
-      'seed-placeholder',
-      0,
-      'application/pdf',
+      'seed-medical-card.pdf',
+      sample.length,
       'review',
       at(-DAY),
     );
@@ -231,13 +262,18 @@ export function seed(db: Db, now = Date.now()): void {
       'DOC-2',
       'D-1042',
       'cdl',
-      'cdl.jpg',
-      'seed-placeholder',
-      0,
-      'image/jpeg',
+      'cdl.pdf',
+      'seed-cdl.pdf',
+      sample.length,
       'approved',
       at(-4 * DAY),
     );
+    if (uploadsDir) {
+      resetUploads(uploadsDir);
+      for (const name of ['seed-medical-card.pdf', 'seed-cdl.pdf']) {
+        fs.writeFileSync(path.join(uploadsDir, name), sample);
+      }
+    }
 
     // Marcus has done everything that is due except signing the fleet policy, which is due
     // today (five days after he was hired). Dana has only had her record check.

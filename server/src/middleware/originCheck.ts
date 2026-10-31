@@ -20,7 +20,13 @@ export function originCheck(appOrigin: string): RequestHandler {
       );
       return;
     }
-    if (!req.headers['content-type']?.startsWith('application/json')) {
+    // Uploads are the one exception to JSON, and they still must come from our own origin.
+    const isUpload = req.method === 'POST' && req.path === '/documents';
+    const contentType = req.headers['content-type'] ?? '';
+    const allowed = isUpload
+      ? contentType.startsWith('multipart/form-data')
+      : contentType.startsWith('application/json');
+    if (!allowed) {
       sendError(
         res,
         415,

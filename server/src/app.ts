@@ -8,6 +8,7 @@ import { createLoginLimiter } from './middleware/loginLimiter.js';
 import { originCheck } from './middleware/originCheck.js';
 import { authRouter } from './routes/auth.js';
 import { loadsRouter } from './routes/loads.js';
+import { documentsRouter } from './routes/documents.js';
 import { meRouter } from './routes/me.js';
 import { notificationsRouter } from './routes/notifications.js';
 import { onboardingRouter } from './routes/onboarding.js';
@@ -15,11 +16,16 @@ import { onboardingRouter } from './routes/onboarding.js';
 interface AppOptions {
   template?: OnboardingTemplate;
   demoMode?: boolean;
+  uploadsDir?: string;
 }
 
 export function createApp(
   db: Db,
-  { template = loadTemplate(), demoMode = config.demoMode }: AppOptions = {},
+  {
+    template = loadTemplate(),
+    demoMode = config.demoMode,
+    uploadsDir = config.uploadsDir,
+  }: AppOptions = {},
 ) {
   const app = express();
   app.disable('x-powered-by');
@@ -40,6 +46,7 @@ export function createApp(
   app.use('/api/me', session, meRouter(db));
   app.use('/api/loads', session, loadsRouter(db));
   app.use('/api/notifications', session, notificationsRouter(db));
+  app.use('/api/documents', session, documentsRouter(db, template, uploadsDir));
   app.use('/api/onboarding', session, onboardingRouter(db, template, demoMode));
 
   app.use('/api', notFound);
