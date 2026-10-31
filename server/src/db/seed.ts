@@ -210,11 +210,13 @@ export function seed(db: Db, now = Date.now()): void {
       'INSERT INTO notification_reads (driver_id, notification_id, read_at) VALUES (?, ?, ?)',
     ).run('D-1042', 'N-4', at(-2 * DAY));
 
-    // The file behind this row arrives with uploads in Slice 5.
-    db.prepare(
+    // The files behind these rows arrive with uploads in Slice 5. Onboarding only needs to
+    // know that each document exists and what state it is in.
+    const insertDocument = db.prepare(
       `INSERT INTO documents (id, driver_id, type, load_id, original_name, stored_name, size, mime, status, uploaded_at)
        VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?)`,
-    ).run(
+    );
+    insertDocument.run(
       'DOC-1',
       'D-1042',
       'medical_card',
@@ -225,5 +227,27 @@ export function seed(db: Db, now = Date.now()): void {
       'review',
       at(-DAY),
     );
+    insertDocument.run(
+      'DOC-2',
+      'D-1042',
+      'cdl',
+      'cdl.jpg',
+      'seed-placeholder',
+      0,
+      'image/jpeg',
+      'approved',
+      at(-4 * DAY),
+    );
+
+    // Marcus has done everything that is due except signing the fleet policy, which is due
+    // today (five days after he was hired). Dana has only had her record check.
+    // These task IDs match the starter template. A test keeps them in step.
+    const insertProgress = db.prepare(
+      'INSERT INTO onboarding_progress (driver_id, task_id, completed_at) VALUES (?, ?, ?)',
+    );
+    insertProgress.run('D-1042', 'safety-video', at(-4 * DAY));
+    insertProgress.run('D-1042', 'record-check', at(-3 * DAY));
+    insertProgress.run('D-1042', 'equipment-walkthrough', at(-1 * DAY));
+    insertProgress.run('D-2217', 'record-check', at(-6 * HOUR));
   })();
 }

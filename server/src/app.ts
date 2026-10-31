@@ -1,5 +1,6 @@
 import express from 'express';
 import { config } from './config/env.js';
+import { loadTemplate, type OnboardingTemplate } from './config/onboarding.js';
 import type { Db } from './db/index.js';
 import { requireSession } from './middleware/auth.js';
 import { errorHandler, notFound } from './middleware/errors.js';
@@ -9,8 +10,17 @@ import { authRouter } from './routes/auth.js';
 import { loadsRouter } from './routes/loads.js';
 import { meRouter } from './routes/me.js';
 import { notificationsRouter } from './routes/notifications.js';
+import { onboardingRouter } from './routes/onboarding.js';
 
-export function createApp(db: Db) {
+interface AppOptions {
+  template?: OnboardingTemplate;
+  demoMode?: boolean;
+}
+
+export function createApp(
+  db: Db,
+  { template = loadTemplate(), demoMode = config.demoMode }: AppOptions = {},
+) {
   const app = express();
   app.disable('x-powered-by');
   app.use(express.json());
@@ -30,6 +40,7 @@ export function createApp(db: Db) {
   app.use('/api/me', session, meRouter(db));
   app.use('/api/loads', session, loadsRouter(db));
   app.use('/api/notifications', session, notificationsRouter(db));
+  app.use('/api/onboarding', session, onboardingRouter(db, template, demoMode));
 
   app.use('/api', notFound);
   app.use(errorHandler);
