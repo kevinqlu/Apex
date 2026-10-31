@@ -19,20 +19,10 @@ export function setUnauthorizedHandler(handler: (() => void) | undefined): void 
 // A 401 from these is an answer, not an expired session.
 const AUTH_QUESTIONS = new Set(['/auth/login', '/auth/me']);
 
-export async function request<T>(
-  method: 'GET' | 'POST' | 'PATCH',
-  path: string,
-  body?: unknown,
-): Promise<T> {
+async function call<T>(path: string, init: RequestInit): Promise<T> {
   let res: Response;
   try {
-    res = await fetch(`/api${path}`, {
-      method,
-      credentials: 'same-origin',
-      // The server requires JSON on every change, as a CSRF check.
-      headers: method === 'GET' ? undefined : { 'Content-Type': 'application/json' },
-      body: method === 'GET' ? undefined : JSON.stringify(body ?? {}),
-    });
+    res = await fetch(`/api${path}`, { ...init, credentials: 'same-origin' });
   } catch {
     throw new ApiError(
       'Cannot reach the server. Check your connection and try again.',
@@ -49,4 +39,23 @@ export async function request<T>(
   const message = payload?.error?.message ?? 'Something went wrong. Try again in a moment.';
   if (res.status === 401 && !AUTH_QUESTIONS.has(path)) onUnauthorized?.();
   throw new ApiError(message, res.status, payload?.error?.code ?? 'unknown');
+}
+
+export function request<T>(
+  method: 'GET' | 'POST' | 'PATCH',
+  path: string,
+  body?: unknown,
+): Promise<T> {
+  if (method === 'GET') return call<T>(path, { method });
+  return call<T>(path, {
+    method,
+    // The server requires JSON on every change, as a CSRF check.
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body ?? {}),
+  });
+}
+
+// For files. The browser sets the multipart type and boundary itself, so no header here.
+export function upload<T>(path: string, form: FormData): Promise<T> {
+  return call<T>(path, { method: 'POST', body: form });
 }

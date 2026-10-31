@@ -88,3 +88,28 @@
   align-self: flex-start;
   border-style: dashed;
 }
+
+/* Documents */
+.doc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Visually hidden, but still focusable. Its label is the tappable button. */
+.file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.file-input:focus-visible + label {
+  outline: 3px solid var(--info);
+  outline-offset: 2px;
+}
+
+a.button {
+  text-decoration: none;
+}

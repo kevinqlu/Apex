@@ -19,6 +19,7 @@ import { ComingSoon } from './components/ComingSoon';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './routes/home/Home';
 import { Alerts } from './routes/alerts/Alerts';
+import { Documents } from './routes/documents/Documents';
 import { Loads } from './routes/loads/Loads';
 import { Login } from './routes/login/Login';
 import { Onboarding } from './routes/onboarding/Onboarding';
@@ -35,12 +36,7 @@ createRoot(document.getElementById('root')!).render(
               <Route path="/loads" element={<Loads />} />
               <Route path="/alerts" element={<Alerts />} />
               <Route path="/onboarding" element={<Onboarding />} />
-              <Route
-                path="/documents"
-                element={
-                  <ComingSoon title="Documents">Your documents will show up here.</ComingSoon>
-                }
-              />
+              <Route path="/documents" element={<Documents />} />
               <Route
                 path="/help"
                 element={<ComingSoon title="Help">Support contacts will show up here.</ComingSoon>}

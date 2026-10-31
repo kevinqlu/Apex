@@ -1,15 +1,15 @@
 import { Icon } from './Icon';
 
-// Shared by every screen that loads the driver's loads.
-export function LoadsLoading() {
+// Shared by every screen that loads something from the server.
+export function Loading({ what }: { what: string }) {
   return (
     <p className="page-status" role="status">
-      Loading your loads…
+      Loading {what}…
     </p>
   );
 }
 
-export function LoadsError({ message, onRetry }: { message: string; onRetry: () => void }) {
+export function LoadError({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div role="alert">
       <p className="message message-error">

@@ -1,18 +1,20 @@
 import { useState } from 'react';
+import { getLoads } from '../../api/loads';
 import { LoadCard } from '../../components/LoadCard';
-import { LoadsError, LoadsLoading } from '../../components/LoadsStatus';
-import { isDelivered, useLoads } from '../../lib/loads';
+import { LoadError, Loading } from '../../components/ResourceStatus';
+import { isDelivered } from '../../lib/loads';
+import { useResource } from '../../lib/useResource';
 
 type Tab = 'current' | 'delivered';
 
 export function Loads() {
-  const { state, reload } = useLoads();
+  const { state, reload } = useResource(getLoads);
   const [tab, setTab] = useState<Tab>('current');
 
   // The server returns loads in pickup order. Delivered shows the newest first.
   const shown =
     state.status === 'ready'
-      ? state.loads.filter((l) => isDelivered(l) === (tab === 'delivered'))
+      ? state.data.loads.filter((l) => isDelivered(l) === (tab === 'delivered'))
       : [];
   if (tab === 'delivered') shown.reverse();
 
@@ -34,8 +36,8 @@ export function Loads() {
         ))}
       </div>
 
-      {state.status === 'loading' && <LoadsLoading />}
-      {state.status === 'error' && <LoadsError message={state.message} onRetry={reload} />}
+      {state.status === 'loading' && <Loading what="your loads" />}
+      {state.status === 'error' && <LoadError message={state.message} onRetry={reload} />}
       {state.status === 'ready' && shown.length === 0 && (
         <p>
           {tab === 'current'

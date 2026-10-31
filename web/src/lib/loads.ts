@@ -1,6 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
-import { getLoads, type Load } from '../api/loads';
-import { ApiError } from '../api/client';
+import type { Load } from '../api/loads';
 
 export const isDelivered = (load: Load) => load.status === 'delivered';
 
@@ -12,26 +10,4 @@ export function pickActiveLoad(loads: Load[]): Load | undefined {
     if (match) return match;
   }
   return undefined;
-}
-
-type LoadsState =
-  { status: 'loading' } | { status: 'error'; message: string } | { status: 'ready'; loads: Load[] };
-
-export function useLoads() {
-  const [state, setState] = useState<LoadsState>({ status: 'loading' });
-
-  const load = useCallback(() => {
-    setState({ status: 'loading' });
-    getLoads().then(
-      ({ loads }) => setState({ status: 'ready', loads }),
-      (err) =>
-        setState({
-          status: 'error',
-          message: err instanceof ApiError ? err.message : 'Something went wrong. Try again.',
-        }),
-    );
-  }, []);
-
-  useEffect(load, [load]);
-  return { state, reload: load };
 }
